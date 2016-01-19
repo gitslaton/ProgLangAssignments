@@ -63,8 +63,9 @@ let distance ((x, y) : int * int) =
 *)
 
 let greeting ((age, name) : int * string) =
-      let str_age = string_of_int age in
-      "Greetings " ^ name ^ ", you are " ^ str_age ^ " years old!";;
+   let str_age = string_of_int age in
+   "Greetings " ^ name ^ ", you are " ^ str_age ^ " years old!";;
+
 (*
    Write a function "greeting2" that is similarly given a pair of an integer (age)
    and a string (name) and creates the string: "Greetings <name>, you are ..." where
@@ -87,8 +88,6 @@ let greeting2 ((age, name) : int * string) =
          "young at heart!";;
 
 
-
-
 (*
    Write a function "tooShort" that is given a pair of an integer and a string
    and returns a boolean indicating whether that integer is strictly larger than
@@ -100,6 +99,7 @@ let greeting2 ((age, name) : int * string) =
 let tooShort ((x, s) : int * string) = 
    let len = String.length s in
    x > len;;
+
 
 (*
    Write a function "totalLength" that is given a pair of strings and returns
@@ -126,8 +126,7 @@ let orderedByLength ((a, b, c) : string * string * string) =
    let len2 = String.length b in
    let len3 = String.length c in
    len1 <= len2 && len2 <= len3;;
-   
-
+ 
 
 (*
    Write a function "prodInRange" that is given a pair of integers, and it returns
