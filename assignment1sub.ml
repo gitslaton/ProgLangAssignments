@@ -63,8 +63,8 @@ let distance ((x, y) : int * int) =
 *)
 
 let greeting ((age, name) : int * string) =
-      let str_age = string_of_int age in
-      "Greetings " ^ name ^ ", you are " ^ str_age ^ " years old!";;
+   let str_age = string_of_int age in
+   "Greetings " ^ name ^ ", you are " ^ str_age ^ " years old!";;
 (*
    Write a function "greeting2" that is similarly given a pair of an integer (age)
    and a string (name) and creates the string: "Greetings <name>, you are ..." where
