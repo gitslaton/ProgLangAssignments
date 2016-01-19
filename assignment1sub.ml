@@ -14,6 +14,12 @@
    It should have type: int * int * int -> int * int * int
 *)
 
+let fixLastTwo ((x, y, z) : int * int * int) =
+   if y > z then 
+      (x, z, y)
+   else 
+      (x, y, z);;
+
 
 (*
    Write a function named "order" that takes a triple of integers and
@@ -21,6 +27,15 @@
    You may want to use the function from the previous part.
    It should have type: int * int * int -> int * int * int
 *)
+
+let order ((x, y, z) : int * int * int)  = 
+   if x < y && x < z then
+      fixLastTwo (x, y, z)
+   else
+      if y < x && y < z then
+         fixLastTwo (y, x, z)
+      else 
+         fixLastTwo(z, x, y);;
 
 
 (*
@@ -30,7 +45,12 @@
    It should have type: int * int -> int
 *)
 
-
+let distance ((x, y) : int * int) = 
+   let d = x - y in
+   if d < 0 then
+      -d
+   else
+      d;;
 
 
 (*
@@ -42,8 +62,9 @@
    You may see "bytes" instead of "string" as a type.
 *)
 
-
-
+let greeting ((age, name) : int * string) =
+      let str_age = string_of_int age in
+      "Greetings " ^ name ^ ", you are " ^ str_age ^ " years old!";;
 (*
    Write a function "greeting2" that is similarly given a pair of an integer (age)
    and a string (name) and creates the string: "Greetings <name>, you are ..." where
@@ -55,6 +76,17 @@
    You may see "bytes" instead of "string" as a type.
 *)
 
+let greeting2 ((age, name) : int * string) = 
+   "Greetings " ^ name ^ ", you are " ^
+   if age <= 0 then
+      "not born yet!"
+   else 
+      if age >= 1 && age <= 20 then
+         "a youngster!"
+      else
+         "young at heart!";;
+
+
 
 
 (*
@@ -65,7 +97,9 @@
    It should have type: int * string -> bool
 *)
 
-
+let tooShort ((x, s) : int * string) = 
+   let len = String.length s in
+   x > len;;
 
 (*
    Write a function "totalLength" that is given a pair of strings and returns
@@ -73,7 +107,10 @@
    It should have type string * string -> int
 *)
 
-
+let totalLength ((a, b) : string * string) = 
+   let len1 = String.length a in
+   let len2 = String.length b in 
+   len1 + len2;;
 
 
 (*
@@ -84,7 +121,12 @@
    It should have type: string * string * string -> bool
 *)
 
-
+let orderedByLength ((a, b, c) : string * string * string) =
+   let len1 = String.length a in
+   let len2 = String.length b in
+   let len3 = String.length c in
+   len1 <= len2 && len2 <= len3;;
+   
 
 
 (*
@@ -95,3 +137,6 @@
    It should have type: int * int -> bool
 *)
 
+let prodInRange ((x, y) : int * int) =
+   let prod = x * y in 
+   prod > 10 && prod < 20;;
