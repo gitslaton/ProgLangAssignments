@@ -14,7 +14,7 @@
    It should have type: int * string list -> string
 *)
 
-
+let getnth ((n, lst) : int * string list) = "u"
 
 (*
    Write a function `lookup` that takes as input a pair of a string s and a list
@@ -25,7 +25,7 @@
    It should have type: string * (string * int) list -> int option
 *)
 
-
+let lookup ((s, lst) : string * (string * int) list) = Some 1
 
 
 (*
@@ -37,7 +37,7 @@
    It should have type: int list -> (int * int) list
 *)
 
-
+let inPairs (lst : int list) = [(1, 2);(3, 4)]
 
 
 (*
@@ -48,6 +48,7 @@
    It should have type: int list list -> int list
 *)
 
+let flatten (lst : int list list) = [1;2;3]
 
 
 (*
@@ -56,6 +57,7 @@
    It should have type: int * int list -> int list
 *)
 
+let remove ((n, lst) : int * int list) = [1]
 
 
 (*
@@ -67,7 +69,7 @@
 *)
 
 
-
+let removeDups (lst : int list) = [1]
 
 (*
    Write a function `collateSome` that takes as input a list of int options
@@ -77,7 +79,7 @@
    It should have type: int option list -> int list
 *)
 
-
+let collateSome (lst : int option list) = [1]
 
 
 (*
@@ -88,7 +90,7 @@
    It should have type: (int * int) list -> int list * int list
 *)
 
-
+let unzip2 (lst : (int * int) list) = ([1], [2])
 
 
 (*
@@ -106,4 +108,4 @@
    It should have type: int * int list -> int list option
 *)
 
-
+let makeChange ((n, lst) : int * int list) = Some [1;2]
