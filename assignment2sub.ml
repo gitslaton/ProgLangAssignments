@@ -124,7 +124,7 @@ let rec collateSome (lst : int option list) =
    It should have type: (int * int) list -> int list * int list
 *)
 
-let unzip2 (lst : (int * int) list) = 
+(*let unzip2 (lst : (int * int) list) = 
    let rec get_part_list ((lst_pairs, fst) : (int * int) list * bool) = 
    match lst_pairs with 
    | [] -> []
@@ -134,9 +134,13 @@ let unzip2 (lst : (int * int) list) =
                            else k :: get_part_list (tl, false)
    in (get_part_list (lst, true), get_part_list (lst, false))
 
-(* is there a simpler, more efficient way to do this? *)
+(* is there a simpler, more efficient way to do this? *) *)
 
-
+let rec unzip2 (lst : (int * int) list) = 
+   match lst with
+   | [] -> ([], [])
+   | (n, k)::tl -> let x, y = unzip2 tl in (n :: x, k :: y)
+   
 (*
    Write a function `makeChange` that takes as input a pair of an integer `n` and a
    list of distinct integers assumed to be in decreasing order. It should return
