@@ -96,7 +96,7 @@ let rec remove ((n, lst) : int * int list) =
 
 
 let rec removeDups (lst : int list) = 
-   match lst with
+   match lst with 
    | [] -> []
    | hd::tl -> hd :: removeDups (remove (hd, tl))
 
