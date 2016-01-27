@@ -35,9 +35,15 @@ let t5c = remove (1, [1]) = []
 let t5d = remove (2, [2; 1]) = [1]
 let t5e = remove (0, [1; 1; 1]) = [1; 1; 1]
 
+
 let t6a = removeDups [4; 1; 2; 1; 4; 5; 20] = [4; 1; 2; 5; 20]
 
 let t7a = collateSome [Some 1; None; Some 2; Some 1; None; Some 3] = [1; 2; 1; 3]
+let t7b = collateSome [Some 1] = [1]
+let t7c = collateSome [None] = []
+let t7d = collateSome [None; Some 0] = [0]
+let t7e = collateSome [Some 3; None] = [3]
+let t7f = collateSome [Some 5; Some 5] = [5; 5]
 
 let t8a = unzip2 [(1, 2); (3, 4); (5, 6)] = ([1; 3; 5], [2; 4; 6])
 

@@ -70,7 +70,7 @@ let rec inPairs (lst : int list) =
 let rec flatten (lst : int list list) = 
    match lst with 
    | [] -> []
-   | hd::tl -> hd @ flatten tl 
+   | hd::tl -> hd @ flatten (tl)
 
 (*
    Write a function `remove` that takes as input a pair of an integer n and a
@@ -83,8 +83,8 @@ let rec remove ((n, lst) : int * int list) =
    | [] -> []
    | hd::tl -> if hd = n
                then remove (n, tl)
-               else hd::remove (n, tl)
-
+               else hd :: remove (n, tl)
+ 
 
 (*
    Write a function `removeDups` that takes a list of integers and returns a
@@ -95,7 +95,10 @@ let rec remove ((n, lst) : int * int list) =
 *)
 
 
-let removeDups (lst : int list) = [1]
+let rec removeDups (lst : int list) = 
+   match lst with
+   | [] -> []
+   | hd::tl -> hd :: removeDups (remove (hd, tl))
 
 (*
    Write a function `collateSome` that takes as input a list of int options
@@ -105,7 +108,12 @@ let removeDups (lst : int list) = [1]
    It should have type: int option list -> int list
 *)
 
-let collateSome (lst : int option list) = [1]
+let rec collateSome (lst : int option list) = 
+   match lst with
+   | [] -> []
+   | hd::tl -> match hd with 
+               | None -> collateSome(tl)
+               | Some n -> n :: collateSome(tl)
 
 
 (*
