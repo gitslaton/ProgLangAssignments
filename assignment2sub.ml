@@ -51,7 +51,12 @@ let rec lookup ((s, lst) : string * (string * int) list) =
    It should have type: int list -> (int * int) list
 *)
 
-let inPairs (lst : int list) = [(1, 2);(3, 4)]
+let rec inPairs (lst : int list) =
+   match lst with 
+   | [] -> []
+   | hd::tl -> match tl with
+               | [] -> []
+               | snd::new_tl -> (hd, snd) :: inPairs(new_tl)
 
 
 (*
