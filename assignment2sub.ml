@@ -71,14 +71,19 @@ let rec flatten (lst : int list list) =
    match lst with 
    | [] -> []
    | hd::tl -> hd @ flatten tl 
-   
+
 (*
    Write a function `remove` that takes as input a pair of an integer n and a
    list of integers, and removes from that list any occurrence of n.
    It should have type: int * int list -> int list
 *)
 
-let remove ((n, lst) : int * int list) = [1]
+let rec remove ((n, lst) : int * int list) = 
+   match lst with
+   | [] -> []
+   | hd::tl -> if hd = n
+               then remove (n, tl)
+               else hd::remove (n, tl)
 
 
 (*
