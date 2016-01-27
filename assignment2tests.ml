@@ -30,6 +30,10 @@ let t4d = flatten [[]; [1]] = [1]
 let t4e = flatten [[0]; []] = [0]
 
 let t5a = remove (3, [3; 4; 3; 1]) = [4; 1]
+let t5b = remove (0, []) = []
+let t5c = remove (1, [1]) = []
+let t5d = remove (2, [2; 1]) = [1]
+let t5e = remove (0, [1; 1; 1]) = [1; 1; 1]
 
 let t6a = removeDups [4; 1; 2; 1; 4; 5; 20] = [4; 1; 2; 5; 20]
 
