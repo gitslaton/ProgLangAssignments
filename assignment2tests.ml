@@ -17,6 +17,11 @@ let t2d = lookup ("k", [("k", -1)]) = Some (-1)
 let t2e = lookup ("k", [("notk", 3)]) = None
   
 let t3a = inPairs [1; 2; 3; 4; 5] = [(1, 2); (3, 4)]
+let t3b = inPairs [] = []
+let t3c = inPairs [1] = []
+let t3d = inPairs [3;2] = [(3,2)]
+let t3e = inPairs [1;2;3] = [(1,2)]
+
 
 let t4a = flatten [[1; 2; 3]; []; [4; 5]; [6]] = [1; 2; 3; 4; 5; 6]
 
