@@ -25,7 +25,7 @@ let t3e = inPairs [1;2;3] = [(1,2)]
 
 let t4a = flatten [[1; 2; 3]; []; [4; 5]; [6]] = [1; 2; 3; 4; 5; 6]
 let t4b = flatten [[]] = []
-let t4c = flatten [[1]] = [1]
+let t4c = flatten [[1]] = [1] 
 let t4d = flatten [[]; [1]] = [1]
 let t4e = flatten [[0]; []] = [0]
 
