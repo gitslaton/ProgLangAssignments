@@ -70,7 +70,7 @@ let rec inPairs (lst : int list) =
 let rec flatten (lst : int list list) = 
    match lst with 
    | [] -> []
-   | hd::tl -> hd @ flatten tl
+   | hd::tl -> hd @ flatten tl 
 (*
    Write a function `remove` that takes as input a pair of an integer n and a
    list of integers, and removes from that list any occurrence of n.
