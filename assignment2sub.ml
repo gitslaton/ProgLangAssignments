@@ -124,8 +124,17 @@ let rec collateSome (lst : int option list) =
    It should have type: (int * int) list -> int list * int list
 *)
 
-let unzip2 (lst : (int * int) list) = ([1], [2])
+let unzip2 (lst : (int * int) list) = 
+   let rec get_part_list ((lst_pairs, fst) : (int * int) list * bool) = 
+   match lst_pairs with 
+   | [] -> []
+   | hd::tl -> match hd with
+               | (n, k) -> if fst
+                           then n :: get_part_list (tl, true)
+                           else k :: get_part_list (tl, false)
+   in (get_part_list (lst, true), get_part_list (lst, false))
 
+(* is there a simpler, more efficient way to do this? *)
 
 (*
    Write a function `makeChange` that takes as input a pair of an integer `n` and a
@@ -142,4 +151,4 @@ let unzip2 (lst : (int * int) list) = ([1], [2])
    It should have type: int * int list -> int list option
 *)
 
-let makeChange ((n, lst) : int * int list) = Some [1;2]
+let makeChange ((n, lst) : int * int list) =  None

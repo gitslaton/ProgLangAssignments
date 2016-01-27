@@ -53,6 +53,9 @@ let t7e = collateSome [Some 3; None] = [3]
 let t7f = collateSome [Some 5; Some 5] = [5; 5]
 
 let t8a = unzip2 [(1, 2); (3, 4); (5, 6)] = ([1; 3; 5], [2; 4; 6])
+let t8b = unzip2 [(1, 2)] = ([1], [2])
+let t8d = unzip2 [(5, 7); (1, 2)] = ([5; 1], [7; 2])
+let t8c = unzip2 [] = ([], [])
 
 let t9a = makeChange (20, [8; 3; 2]) = Some [8; 8; 2; 2]
 let t9b = makeChange (20, [8; 3]) = Some [8; 3; 3; 3; 3]
