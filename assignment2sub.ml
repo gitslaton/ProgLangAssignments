@@ -38,8 +38,8 @@ let rec lookup ((s, lst) : string * (string * int) list) =
    | [] -> None
    | hd::tl -> match hd with
                | (to_match, i) -> if s = to_match
-                           then Some i
-                           else lookup (s, tl)
+                                  then Some i
+                                  else lookup (s, tl)
 
 
 (*
