@@ -33,7 +33,13 @@ let rec getnth ((n, lst) : int * string list) =
    It should have type: string * (string * int) list -> int option
 *)
 
-let lookup ((s, lst) : string * (string * int) list) = Some 1
+let rec lookup ((s, lst) : string * (string * int) list) = 
+   match lst with
+   | [] -> None
+   | hd::tl -> match hd with
+               | (to_match, i) -> if s = to_match
+                           then Some i
+                           else lookup (s, tl)
 
 
 (*
