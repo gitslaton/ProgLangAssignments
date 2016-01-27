@@ -12,7 +12,7 @@ let t1f = getnth (2, ["hi"; "there"; "you"]) = "there"
 
 let t2a = lookup ("you", []) = None
 let t2b = lookup ("you", [("him", 2); ("you", 3)]) = Some 3
-
+  
 let t3a = inPairs [1; 2; 3; 4; 5] = [(1, 2); (3, 4)]
 
 let t4a = flatten [[1; 2; 3]; []; [4; 5]; [6]] = [1; 2; 3; 4; 5; 6]
