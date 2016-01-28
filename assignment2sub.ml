@@ -166,7 +166,7 @@ let rec makeChange ((n, lst) : int * int list) =
         | hd::tl -> match makeChange (n - hd, lst) with
                   | None -> makeChange(n, tl)
                   | Some lst' -> Some (hd::lst')
-
+ 
    (*
    match lst with
      | [] -> []
