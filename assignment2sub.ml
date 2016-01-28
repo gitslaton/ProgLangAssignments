@@ -157,6 +157,7 @@ let rec unzip2 (lst : (int * int) list) =
 *)
 
 let rec makeChange ((n, lst) : int * int list) = (*Some [1]*)
+   (*
    match lst with
      | [] -> []
      | hd::tl -> if n - hd > 0 
@@ -165,14 +166,15 @@ let rec makeChange ((n, lst) : int * int list) = (*Some [1]*)
                  then hd::[]
                  else (* n - hd < 0 *)
                   makeChange(n, tl)
-
-(*
+   *)
    if n < 0
    then None
    else if n = 0
    then Some []
-   else match makeChange (n, lst) with
-        | None -> None
-        | Some (hd::tl) -> (makeChange (n - hd, lst))
+   else match lst with
+        | [] -> None
+        | hd::tl -> match (makeChange (n - hd, lst)) with
+                  | None -> makeChange(n, tl)
+                  | Some lst' -> Some (hd::lst')
 
-*)
+
