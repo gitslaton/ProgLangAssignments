@@ -156,7 +156,17 @@ let rec unzip2 (lst : (int * int) list) =
    It should have type: int * int list -> int list option
 *)
 
-let rec makeChange ((n, lst) : int * int list) = (*Some [1]*)
+let rec makeChange ((n, lst) : int * int list) = 
+   if n < 0
+   then None
+   else if n = 0
+   then Some []
+   else match lst with
+        | [] -> None
+        | hd::tl -> match makeChange (n - hd, lst) with
+                  | None -> makeChange(n, tl)
+                  | Some lst' -> Some (hd::lst')
+
    (*
    match lst with
      | [] -> []
@@ -167,14 +177,4 @@ let rec makeChange ((n, lst) : int * int list) = (*Some [1]*)
                  else (* n - hd < 0 *)
                   makeChange(n, tl)
    *)
-   if n < 0
-   then None
-   else if n = 0
-   then Some []
-   else match lst with
-        | [] -> None
-        | hd::tl -> match (makeChange (n - hd, lst)) with
-                  | None -> makeChange(n, tl)
-                  | Some lst' -> Some (hd::lst')
-
 

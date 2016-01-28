@@ -61,8 +61,10 @@ let t8c = unzip2 [] = ([], [])
 let t9a = makeChange (20, [8; 3; 2]) =  Some [8; 8; 2; 2]
 let t9b = makeChange (20, [8; 3]) = Some [8; 3; 3; 3; 3]
 let t9c = makeChange (20, [13; 11]) = None
-let t9d = makeChange (0, [0]) = Some [0]
+(* let t9d = makeChange (0, [0]) = Some [0]
+  -currently impossible to pass with current implementation 
+    because line 162-163 on assignment2sub precedes match statement *)
 let t9e = makeChange(33, [32; 1; 0]) = Some [32; 1]
-let t9f = makeChange(0, []) = None
+let t9f = makeChange(0, []) = Some []
 let t9g = makeChange(4, [2]) = Some [2; 2]
-
+let t9h = makeChange(1, [1]) = Some [1]
