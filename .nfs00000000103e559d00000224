@@ -170,9 +170,9 @@ let rec makeChange ((n, lst) : int * int list) = (*Some [1]*)
    if n < 0
    then None
    else if n = 0
-   then Some []
+   then []
    else match makeChange (n, lst) with
-        | None -> None
+        | None -> []
         | Some (hd::tl) -> (makeChange (n - hd, lst))
 
 *)
