@@ -52,10 +52,31 @@ type play = shape list
    Type: check -> result
 *)
 
-let result (chk : check) : result = Tie
+let result (chk : check) : result = 
+   match chk with 
+   | (Rock, s) -> (match s with
+                  | Paper -> SndWin
+                  | Scissors -> FstWin
+                  | Rock -> Tie)
+   | (Paper, s) -> (match s with
+                   | Scissors -> SndWin
+                   | Rock -> FstWin
+                   | Paper -> Tie)
+   | (Scissors, s) -> (match s with
+                      | Rock  -> SndWin
+                      | Paper -> FstWin
+                      | Scissors -> Tie)
+   
+   (* match chk with
+   | (Rock, Scissors)
+   | (Paper, Rock)
+   | (Scissors, Paper) -> FstWin
+   | (Rock, Paper)
+   | (Paper, Scissors)
+   | (Scissors, Rock) -> SndWin
+   | (_,_) -> Tie
 
-
-
+   *)
 (*
    Write a function `is_tie` that takes as input a check and returns
    whether the check's result is a tie.
