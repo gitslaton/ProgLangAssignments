@@ -52,6 +52,8 @@ type play = shape list
    Type: check -> result
 *)
 
+let result (chk : check) : result = Tie
+
 
 
 (*
@@ -60,7 +62,7 @@ type play = shape list
    Type: check -> bool
 *)
 
-
+let is_tie (chk: check) : bool = false
 
 
 (*
@@ -71,6 +73,7 @@ type play = shape list
    Type: play * play -> game
 *)
 
+let game_from_plays ((play1, play2) : play * play) : game = [(Rock, Paper)]
 
 
 (*
@@ -79,6 +82,7 @@ type play = shape list
    Type: game -> bool
 *)
 
+let valid_game (g : game) : bool = false
 
 
 (*
@@ -86,6 +90,7 @@ type play = shape list
    Type: game -> result
 *)
 
+let play_game (g : game) : result = Tie
 
 (* --------------------------------------
             TEMPERATURES
@@ -107,6 +112,7 @@ type temp = C of float | F of float
    Type: temp -> float
 *)
 
+let to_f (t : temp) : float = 1.0
 
 (*
    Write a function `temp_compare` that takes as input a pair of temperatures and
@@ -115,7 +121,7 @@ type temp = C of float | F of float
    Type: temp * temp -> int
 *)
 
-
+let temp_compare ((t1, t2) : temp * temp) : int = 1
 
 (*
    Write a function `string_of_temp` that takes as input a temperature and
@@ -126,7 +132,7 @@ type temp = C of float | F of float
    Type: temp -> string
 *)
 
-
+let string_of_temp (t1 : temp) : string = "tstring"
 
 
 (*
@@ -135,8 +141,13 @@ type temp = C of float | F of float
    if the list is empty.
    Type: temp list -> temp
 *)
+
+let max_temp (lst : temp list) : temp = F 1.0
+
 (*
    Write a function `max_temp2` that behaves like `max_temp` but where all the
    recursive calls are tail calls. You will likely need to define an auxiliary
    function and use state recursion.
 *)
+
+let max_temp2 (lst: temp list) : temp = F 1.0
