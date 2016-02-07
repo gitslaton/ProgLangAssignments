@@ -166,7 +166,20 @@ let to_f (t : temp) : float =
    Type: temp * temp -> int
 *)
 
-let temp_compare ((t1, t2) : temp * temp) : int = 1
+let temp_compare (t_pair : temp * temp) : int = 
+  let f_compare ((x, y) : float * float) : int =
+    if x = y
+    then 0
+    else if x > y
+         then 1
+         else -1
+  in match t_pair with 
+     | (F f1, t) -> ( match t with
+                      | F f2 -> f_compare (f1, f2)
+                      | c -> f_compare (f1, to_f c) )
+     | (C c1, t) -> ( match t with
+                      | C c2 -> f_compare (c1, c2)
+                      | F f -> f_compare (to_f (C c1), f) ) 
 
 (*
    Write a function `string_of_temp` that takes as input a temperature and
