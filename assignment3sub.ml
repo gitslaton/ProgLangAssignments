@@ -96,10 +96,10 @@ let is_tie (chk : check) : bool =
 *)
 
 let rec game_from_plays (play_lst : play * play) : game = 
-   match play_lst with
-   | ([], _ )
-   | ( _, [] ) -> []
-   | (play1::rest1, play2::rest2) -> (play1, play2)::game_from_plays (rest1, rest2)
+  match play_lst with
+  | ([], _ )
+  | ( _, [] ) -> []
+  | (play1::rest1, play2::rest2) -> (play1, play2)::game_from_plays (rest1, rest2)
 
 
 
@@ -111,14 +111,14 @@ let rec game_from_plays (play_lst : play * play) : game =
 *)
 
 let rec valid_game (g : game) : bool = 
-   match g with
-   | [] -> false
-   | chk::[] -> not (is_tie chk)
-   | chk::g' -> if is_tie chk
-                then valid_game g'
-                else match g' with
-                | [] -> true
-                | _ -> false 
+  match g with
+  | [] -> false
+  | chk::[] -> not (is_tie chk)
+  | chk::g' -> if is_tie chk
+               then valid_game g'
+               else match g' with
+               | [] -> true
+               | _ -> false 
 
    
 
