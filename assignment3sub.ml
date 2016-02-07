@@ -84,7 +84,7 @@ let result (chk : check) : result =
 *)
 
 let is_tie (chk : check) : bool = 
-   result chk = Tie
+  result chk = Tie
 
 
 (*
