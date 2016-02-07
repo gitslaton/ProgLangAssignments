@@ -25,6 +25,7 @@ let t4a = valid_game [(Rock, Scissors)] = true
 let t4b = valid_game [(Paper, Paper)] = false
 let t4d = valid_game [(Rock, Paper); (Scissors, Scissors)] = false
 let t4c = valid_game [(Scissors, Paper); (Paper, Rock)] = false
+let t4e = valid_game [] = false 
 
 
 let t5a = play_game [(Rock, Rock); (Scissors, Rock)] = SndWin
