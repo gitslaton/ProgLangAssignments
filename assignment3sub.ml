@@ -83,7 +83,8 @@ let result (chk : check) : result =
    Type: check -> bool
 *)
 
-let is_tie (chk: check) : bool = false
+let is_tie (chk : check) : bool = 
+   result chk = Tie
 
 
 (*
@@ -94,7 +95,13 @@ let is_tie (chk: check) : bool = false
    Type: play * play -> game
 *)
 
-let game_from_plays ((play1, play2) : play * play) : game = [(Rock, Paper)]
+let rec game_from_plays (play_lst : play * play) : game = 
+   match play_lst with
+   | ([], _ )
+   | ( _, [] ) -> []
+   | (play1::rest1, play2::rest2) -> (play1, play2)::game_from_plays (rest1, rest2)
+
+
 
 
 (*
@@ -103,15 +110,27 @@ let game_from_plays ((play1, play2) : play * play) : game = [(Rock, Paper)]
    Type: game -> bool
 *)
 
-let valid_game (g : game) : bool = false
+let rec valid_game (g : game) : bool = 
+   match g with
+   | chk::[] -> not (is_tie chk)
+   | chk::g' -> if is_tie chk
+                then valid_game g'
+                else match g' with
+                | [] -> true
+                | _ -> false 
 
+   
 
 (*
    Write a function `play_game` that plays the game as described above.
    Type: game -> result
 *)
 
-let play_game (g : game) : result = Tie
+let rec play_game (g : game) : result = 
+   match g with
+   | chk::g' -> if is_tie chk
+                then play_game g'
+                else result chk
 
 (* --------------------------------------
             TEMPERATURES
@@ -163,7 +182,7 @@ let string_of_temp (t1 : temp) : string = "tstring"
    Type: temp list -> temp
 *)
 
-let max_temp (lst : temp list) : temp = F 1.0
+let rec max_temp (lst : temp list) : temp = F 1.0
 
 (*
    Write a function `max_temp2` that behaves like `max_temp` but where all the
@@ -171,4 +190,4 @@ let max_temp (lst : temp list) : temp = F 1.0
    function and use state recursion.
 *)
 
-let max_temp2 (lst: temp list) : temp = F 1.0
+let rec max_temp2 (lst: temp list) : temp = F 1.0

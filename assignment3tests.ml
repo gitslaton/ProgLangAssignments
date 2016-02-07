@@ -9,11 +9,23 @@ let t1h = result (Scissors, Rock) = SndWin
 let t1i = result (Rock, Scissors) = FstWin
 
 let t2a = is_tie (Rock, Paper) = false
+let t2b = is_tie (Rock, Rock) = true
+let t2c = is_tie (Paper, Scissors) = false
 
 let t3a = game_from_plays ([Rock; Paper; Rock], [Scissors; Rock; Rock]) =
                [(Rock, Scissors); (Paper, Rock); (Rock, Rock)]
+let t3b = game_from_plays ([Rock], [Rock]) = [(Rock, Rock)]
+let t3c = game_from_plays ([], []) = []
+let t3d = game_from_plays ([], [Scissors]) = []
+let t3e = game_from_plays ([Paper; Scissors], []) = []
+let t3f = game_from_plays ([Paper; Scissors], [Scissors; Rock; Scissors]) = 
+                          [(Paper, Scissors); (Scissors, Rock)]
 
 let t4a = valid_game [(Rock, Scissors)] = true
+let t4b = valid_game [(Paper, Paper)] = false
+let t4d = valid_game [(Rock, Paper); (Scissors, Scissors)] = false
+let t4c = valid_game [(Scissors, Paper); (Paper, Rock)] = false
+
 
 let t5a = play_game [(Rock, Rock); (Scissors, Rock)] = SndWin
 
