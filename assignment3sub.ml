@@ -112,6 +112,7 @@ let rec game_from_plays (play_lst : play * play) : game =
 
 let rec valid_game (g : game) : bool = 
    match g with
+   | [] -> false
    | chk::[] -> not (is_tie chk)
    | chk::g' -> if is_tie chk
                 then valid_game g'
