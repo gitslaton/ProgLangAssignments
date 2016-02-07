@@ -42,6 +42,13 @@ let t6c = to_f (C 0.0) = 32.0
 let t6d = to_f (C (-1.3)) = 29.66
 
 let t7a = temp_compare (F 2.3, F 4.5) = -1
+let t7b = temp_compare (C 0.0, F 32.0) = 0
+let t7c = temp_compare (C 32.0, C 32.0) = 0
+let t7d = temp_compare (F 0.0, F 0.0) = 0
+let t7e = temp_compare (F 0.0, C (-20.0)) = 1
+let t7f = temp_compare (C 20.0, F 19.0) = 1
+let t7g = temp_compare (F 0.0, C 0.0) = -1
+
 
 let t8a = string_of_temp (C 2.3) = "2.3C"
 
