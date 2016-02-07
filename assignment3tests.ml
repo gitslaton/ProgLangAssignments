@@ -10,7 +10,7 @@ let t1i = result (Rock, Scissors) = FstWin
 
 let t2a = is_tie (Rock, Paper) = false
 let t2b = is_tie (Rock, Rock) = true
-let t2c = is_tie (Paper, Scissors) = false
+let t2c = is_tie (Paper, Scissors) = false 
 
 let t3a = game_from_plays ([Rock; Paper; Rock], [Scissors; Rock; Rock]) =
                [(Rock, Scissors); (Paper, Rock); (Rock, Rock)]
