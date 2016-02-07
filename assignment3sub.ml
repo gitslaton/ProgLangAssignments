@@ -129,6 +129,7 @@ let rec valid_game (g : game) : bool =
 
 let rec play_game (g : game) : result = 
    match g with
+   | [] -> Tie
    | chk::g' -> if is_tie chk
                 then play_game g'
                 else result chk
