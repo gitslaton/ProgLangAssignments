@@ -29,6 +29,12 @@ let t4e = valid_game [] = false
 
 
 let t5a = play_game [(Rock, Rock); (Scissors, Rock)] = SndWin
+let t5b = play_game [(Paper, Paper)] = Tie
+let t5c = play_game [(Scissors, Scissors); (Rock, Rock)] = Tie
+let t5d = play_game [(Paper, Rock)] = FstWi
+let t5g = play_game [(Paper, Scissors)] = SndWin
+let t5e = play_game [] = Tie
+let t5f = play_game [(Scissors, Scissors); (Rock, Rock); (Rock, Scissors)] = FstWin
 
 let t6a = to_f (F 2.3) = 2.3
 
