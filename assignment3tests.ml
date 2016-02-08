@@ -60,6 +60,11 @@ let t9a = max_temp [F 2.1; C 2.1] = C 2.1
 let t9b = max_temp [F 0.0] = F 0.0
 let t9c = max_temp [C 39.0; F 39.0] = C 39.0
 let t9d = max_temp [F 0.0; C 0.0] = C 0.0
-let t9f = max_temp [F 1.0; F 3.0; F 2.0] = F 3.0
+let t9e = max_temp [F 1.0; F 3.0; F 2.0] = F 3.0
 
 let t10a = max_temp2 [F 2.1; C 2.1] = C 2.1
+let t10b = max_temp2 [F 0.0] = F 0.0
+let t10c = max_temp2 [C 39.0; F 39.0] = C 39.0
+let t10d = max_temp2 [F 0.0; C 0.0] = C 0.0
+let t10e = max_temp2 [F 1.0; F 3.0; F 2.0] = F 3.0
+
