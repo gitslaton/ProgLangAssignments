@@ -55,17 +55,17 @@ type play = shape list
 let result (chk : check) : result = 
    match chk with 
    | (Rock, s) -> (match s with
-                  | Paper -> SndWin
-                  | Scissors -> FstWin
-                  | Rock -> Tie)
+                   | Paper -> SndWin
+                   | Scissors -> FstWin
+                   | Rock -> Tie)
    | (Paper, s) -> (match s with
-                   | Scissors -> SndWin
-                   | Rock -> FstWin
-                   | Paper -> Tie)
+                    | Scissors -> SndWin
+                    | Rock -> FstWin
+                    | Paper -> Tie)
    | (Scissors, s) -> (match s with
-                      | Rock  -> SndWin
-                      | Paper -> FstWin
-                      | Scissors -> Tie)
+                       | Rock  -> SndWin
+                       | Paper -> FstWin
+                       | Scissors -> Tie)
    
    (* match chk with
    | (Rock, Scissors)
@@ -102,8 +102,6 @@ let rec game_from_plays (play_lst : play * play) : game =
   | (play1::rest1, play2::rest2) -> (play1, play2)::game_from_plays (rest1, rest2)
 
 
-
-
 (*
    Write a function `valid_game` that takes as input a game and determines if it is
    a valid game as described above.
@@ -120,7 +118,6 @@ let rec valid_game (g : game) : bool =
                | [] -> true
                | _ -> false 
 
-   
 
 (*
    Write a function `play_game` that plays the game as described above.
@@ -133,6 +130,7 @@ let rec play_game (g : game) : result =
    | chk::g' -> if is_tie chk
                 then play_game g'
                 else result chk
+
 
 (* --------------------------------------
             TEMPERATURES
@@ -159,6 +157,7 @@ let to_f (t : temp) : float =
   | F x -> x
   | C x -> (1.8 *. x) +. 32.0
 
+
 (*
    Write a function `temp_compare` that takes as input a pair of temperatures and
    "compares" them, returning 1 if the first temperature is higher, 0 if they are
@@ -174,12 +173,13 @@ let temp_compare (t_pair : temp * temp) : int =
          then 1
          else -1
   in match t_pair with 
-     | (F f1, t) -> ( match t with
-                      | F f2 -> f_compare (f1, f2)
-                      | c -> f_compare (f1, to_f c) )
-     | (C c1, t) -> ( match t with
-                      | C c2 -> f_compare (c1, c2)
-                      | F f -> f_compare (to_f (C c1), f) ) 
+     | (F f1, t) -> (match t with
+                     | F f2 -> f_compare (f1, f2)
+                     | c -> f_compare (f1, to_f c))
+     | (C c1, t) -> (match t with
+                     | C c2 -> f_compare (c1, c2)
+                     | F f -> f_compare (to_f (C c1), f)) 
+
 
 (*
    Write a function `string_of_temp` that takes as input a temperature and
@@ -204,12 +204,14 @@ let string_of_temp (t : temp) : string =
 *)
 
 let rec max_temp (lst : temp list) : temp =
-  match lst with
+  match lst with 
   | [] -> raise (Failure "max_temp")
   | hd::[] -> hd
   | hd::hd'::tl -> if to_f hd' > to_f hd
                    then max_temp (hd'::tl)
                    else max_temp (hd::tl) 
+
+                   
 (*
    Write a function `max_temp2` that behaves like `max_temp` but where all the
    recursive calls are tail calls. You will likely need to define an auxiliary
