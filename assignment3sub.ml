@@ -217,12 +217,12 @@ let rec max_temp (lst : temp list) : temp =
 *)
 
 let max_temp2 (lst : temp list) : temp = 
-  in let rec find_max (curr_max, lst' : temp * temp list) : temp =
-     match lst' with
-     | [] -> curr_max
-     | hd::tl -> if hd > curr_max
-                 then find_max (hd, tl)
-                 else find_max (curr_max, tl)
+  let rec find_max (curr_max, lst' : temp * temp list) : temp =
+    match lst' with
+    | [] -> curr_max
+    | hd::tl -> if to_f hd > to_f curr_max
+                then find_max (hd, tl)
+                else find_max (curr_max, tl)
   in match lst with
      | [] -> raise (Failure "max_temp2")
      | hd'::tl' -> find_max(hd', tl') 
