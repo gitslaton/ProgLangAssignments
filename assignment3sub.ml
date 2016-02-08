@@ -190,7 +190,10 @@ let temp_compare (t_pair : temp * temp) : int =
    Type: temp -> string
 *)
 
-let string_of_temp (t1 : temp) : string = "tstring"
+let string_of_temp (t : temp) : string = 
+  match t with
+  | F f -> string_of_float f ^ "F"
+  | C c -> string_of_float c ^ "C"
 
 
 (*
