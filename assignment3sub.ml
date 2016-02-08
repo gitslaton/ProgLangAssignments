@@ -203,12 +203,26 @@ let string_of_temp (t : temp) : string =
    Type: temp list -> temp
 *)
 
-let rec max_temp (lst : temp list) : temp = F 1.0
-
+let rec max_temp (lst : temp list) : temp =
+  match lst with
+  | [] -> raise (Failure "max_temp")
+  | hd::[] -> hd
+  | hd::hd'::tl -> if to_f hd' > to_f hd
+                   then max_temp (hd'::tl)
+                   else max_temp (hd::tl) 
 (*
    Write a function `max_temp2` that behaves like `max_temp` but where all the
    recursive calls are tail calls. You will likely need to define an auxiliary
    function and use state recursion.
 *)
 
-let rec max_temp2 (lst: temp list) : temp = F 1.0
+let max_temp2 (lst : temp list) : temp = 
+  in let rec find_max (curr_max, lst' : temp * temp list) : temp =
+     match lst' with
+     | [] -> curr_max
+     | hd::tl -> if hd > curr_max
+                 then find_max (hd, tl)
+                 else find_max (curr_max, tl)
+  in match lst with
+     | [] -> raise (Failure "max_temp2")
+     | hd'::tl' -> find_max(hd', tl') 
