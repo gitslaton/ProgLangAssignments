@@ -51,11 +51,15 @@ let t7g = temp_compare (F 0.0, C 0.0) = -1
 
 
 let t8a = string_of_temp (C 2.3) = "2.3C"
-let t8b = string_of_temp (C 0.0) = "0.0C"
+let t8b = string_of_temp (C 0.0) = "0.C"
 let t8c = string_of_temp (C (-1.03)) = "-1.03C"
-let t8d = string_of_temp (F 32.0) = "32.0F"
+let t8d = string_of_temp (F 32.0) = "32.F"
 let t8f = string_of_temp (F (-6.078)) = "-6.078F"
 
 let t9a = max_temp [F 2.1; C 2.1] = C 2.1
+let t9b = max_temp [F 0.0] = F 0.0
+let t9c = max_temp [C 39.0; F 39.0] = C 39.0
+let t9d = max_temp [F 0.0; C 0.0] = C 0.0
+let t9f = max_temp [F 1.0; F 3.0; F 2.0] = F 3.0
 
 let t10a = max_temp2 [F 2.1; C 2.1] = C 2.1
