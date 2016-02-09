@@ -57,7 +57,7 @@ let t11a = lookup_opt ([("bar", 3); ("foo", 2)], "bar") = Some 3
 (* Again the search should be stopping after "foo" *)
 let t11b = lookup_opt ([("foo", 2); ("bar", 3)], "bar") = None
 
-let t12a = delete ([("bar", 3); ("baz", 1); ("foo", 2)], "baz") = [("baz", 1); ("foo", 2)]
+let t12a = delete ([("bar", 3); ("baz", 1); ("foo", 2)], "bar") = [("baz", 1); ("foo", 2)]
 
 let t13a = keys [("bar", 3); ("foo", 2)] = ["bar"; "foo"]
 

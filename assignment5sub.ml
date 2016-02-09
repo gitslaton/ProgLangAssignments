@@ -1,5 +1,4 @@
 (* Programming Languages, Assignment 5 *)
-(* NOT READY *)
 (*
    You should write your functions in this file.
    You should NOT specify the types of your functions. Let the system determine
