@@ -188,8 +188,10 @@ let rec insert (sym_tbl, in_sym, in_v) =
 let rec has (sym_tbl, in_sym) =
    match sym_tbl with
    | [] -> false
-   | (s, v)::tl -> not in_sym > s && (in_sym = s || has (tl, in_sym))
-
+   | (s, v)::tl -> if s > in_sym 
+                   then false 
+                   else s = in_sym || has (tl, in_sym) 
+                        
 (*
    Write a function `lookup` that takes as input a pair of a symbol table and a
    symbol. If it finds in the table a pair with that symbol as a key then it
@@ -200,7 +202,14 @@ let rec has (sym_tbl, in_sym) =
    It should have type: 'a table * symbol -> 'a
 *)
 
-
+let rec lookup (sym_tbl, in_sym) = 
+   match sym_tbl with
+   | [] -> raise (Not_found)
+   | (s, v)::tl -> if in_sym = s
+                   then v
+                   else if s > in_sym
+                        then raise (Not_found) 
+                        else lookup (tl, in_sym)
 
 (*
    Write a function `lookup_opt` that takes as input a pair of a symbol table and a
