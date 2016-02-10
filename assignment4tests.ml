@@ -88,9 +88,14 @@ let t11e = lookup_opt (["r", 1], "h") = None
 
 
 let t12a = delete ([("bar", 3); ("baz", 1); ("foo", 2)], "bar") = [("baz", 1); ("foo", 2)]
+let t12b = delete ([("bar", 3)], "bar") = []
+let t12c = delete ([("abar", 3); ("bbar", 2)], "bbar") = [("abar", 3)]
+
 
 
 let t13a = keys [("bar", 3); ("foo", 2)] = ["bar"; "foo"]
+let t13b = keys [] = []
+let t13c = keys [("a", 2)] = ["a"]
 
 
 let t14a = is_proper [("bar", 3); ("foo", 2)] = true

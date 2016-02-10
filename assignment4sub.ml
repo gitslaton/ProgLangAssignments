@@ -222,7 +222,7 @@ let rec lookup (sym_tbl, s) =
    It should have type: 'a table * symbol -> 'a option
 *)
 
-let lookup_opt (sym_tbl, s) = 
+let rec lookup_opt (sym_tbl, s) = 
    match sym_tbl with
    | [] -> None
    | (s', v)::tl -> if s' = s
@@ -239,7 +239,15 @@ let lookup_opt (sym_tbl, s) =
    It should have type: 'a table * symbol -> 'a table
 *)
 
-let delete (sym_tbl, s) = sym_tbl
+let rec delete (sym_tbl, s) = 
+   match sym_tbl with
+   | [] -> []
+   | (s', v)::tl -> if s' = s
+                    then tl
+                    else if s' > s
+                         then sym_tbl
+                         else (s', v)::(delete (tl, s))
+
 
 (*
    Write a function `keys` that takes as input a symbol table and returns a list
@@ -247,4 +255,14 @@ let delete (sym_tbl, s) = sym_tbl
    It should have type: 'a table -> symbol list
 *)
 
-let keys sym_tbl = ["s"]
+let rec keys sym_tbl = 
+   match sym_tbl with
+   | [] -> []
+   | (s, v)::tl -> s::keys tl
+
+(*
+   Write a function `is_proper` that takes as input a symbol table and returns
+   a boolean indicating if the table is "proper", namely if the invariant is
+   maintained that they keys appear in strictly increasing order.
+   It should have type: 'a table -> bool
+*)
