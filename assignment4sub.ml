@@ -167,12 +167,14 @@ let rec insert (sym_tbl, in_sym, in_v) =
                    then (in_sym, in_v)::(s, v)::[]
                    else if in_sym = s 
                         then (in_sym, in_v)::[]
-                        else (s, v)::(in_sym, v)::[]
-   | (s, v)::tl -> if in_sym < s
-                   then (in_sym, in_v)::insert(tl, in_sym, in_v)
-                   else if in_sym = s
-                        then (in_sym, in_v)::insert(tl, in_sym, in_v)
-                        else (s, v)::insert(tl, in_sym, in_v) 
+                        else (s, v)::(in_sym, in_v)::[]
+   | (s, v)::tl -> match tl with
+                  | [] -> []
+                  | (s_ahead, v_ahead)::tl' -> if in_sym < s
+                                               then (in_sym, in_v)::(s, v)::insert(tl, s_ahead, v_ahead)
+                                               else if in_sym = s
+                                                    then (in_sym, in_v)::insert(tl, s_ahead, v_ahead)
+                                                    else (s, v)::insert(tl, in_sym, in_v) 
 
 (*
    Write a function `has` that takes as input a pair of a symbol table and a symbol
@@ -183,7 +185,10 @@ let rec insert (sym_tbl, in_sym, in_v) =
    It should have type: 'a table * symbol -> bool
 *)
 
-
+let rec has (sym_tbl, in_sym) =
+   match sym_tbl with
+   | [] -> false
+   | (s, v)::tl -> not in_sym > s && (in_sym = s || has (tl, in_sym))
 
 (*
    Write a function `lookup` that takes as input a pair of a symbol table and a

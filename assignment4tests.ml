@@ -40,8 +40,19 @@ let t7b = let f = fun () -> 5
           in thunk_of_list [f; f] () = [5; 5]
 
 let t8a = insert (empty, "foo", 3) = [("foo", 3)]
+let t8b = insert ([("x", 1)], "k", 1) = [("k", 1); ("x", 1)]
+let t8c = insert ([("a", (-1))], "k", 1) = [("a", (-1)); ("k", 1)]
+let t8d = insert ([("a", (-1)); ("k", 1); ("r", 99)], "b", 2) = 
+                  [("a", (-1)); ("b", 2); ("k", 1); ("r", 99)]
+
 
 let t9a = has ([("foo", 2)], "foo") = true
+let t9b = has ([("foo", 3)], "fad") = false
+let t9c = has ([], "bar") = false
+let t9d = has ([("lap", 13); ("foo", 3)], "foo") = true
+let t9e = has ([("lap", 13); ("foo", 3)], "fad") = false
+let t9f = has ([("lap", 13); ("foo", 3)], "lap") = true
+let t9g = has ([("lap", 13); ("foo", 3); ("lad", 2)], "foo") = true
 
 let t10a = lookup ([("bar", 3); ("foo", 2)], "bar") = 3
 let t10b = try (lookup ([("bar", 3); ("foo", 2)], "baz"); false)
