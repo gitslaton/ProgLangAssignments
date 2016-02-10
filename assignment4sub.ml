@@ -28,13 +28,15 @@
 *)
 type 'a thunk = unit -> 'a
 
+(*let th = fun () -> 3 + 4
+let curry f = fun x y -> f (x, y)*)
 (*
    Write a function `thunk` that takes as input a function of type `unit -> 'a`
    and returns the `'a thunk` from it. This is an incredibly simple function.
    It should have type: (unit -> 'a) -> 'a thunk
 *)
 
-
+let thunk f = f
 
 (*
    Write a function `thunk_of_value` that takes as input a value of type `'a` and
@@ -43,7 +45,7 @@ type 'a thunk = unit -> 'a
    Should have type: 'a -> 'a thunk
 *)
 
-
+let thunk_of_value x = fun () -> x
 
 (*
    Write a function `thunk_of_eval` that takes as input a pair of a function `'a -> 'b`
@@ -53,6 +55,7 @@ type 'a thunk = unit -> 'a
    It should have type: ('a -> 'b) * 'a -> 'a thunk
 *)
 
+let thunk_of_eval (f, x) = fun () -> f x
 
 
 
@@ -65,7 +68,9 @@ type 'a thunk = unit -> 'a
    It should have type: 'a thunk -> 'a option
 *)
 
-
+let try_thunk f = 
+   try Some (f ()) with
+   | _ -> None
 
 (*
    Write a function `thunk_of_pair` that takes as input a pair of thunks, and returns
@@ -75,6 +80,7 @@ type 'a thunk = unit -> 'a
    It should have type: 'a thunk * 'b thunk -> ('a * 'b) thunk
 *)
 
+let thunk_of_pair (f, f') = fun () -> (f (), f' ())
 
 
 (*
@@ -86,7 +92,7 @@ type 'a thunk = unit -> 'a
    It should have type: 'a thunk * ('a -> 'b) -> 'b thunk
 *)
 
-
+let thunk_map (f, k) = fun () -> let i = f() in  k i 
 
 (*
    Write a function `thunk_of_list` that takes as input a list of `'a thunk`s and
@@ -97,6 +103,10 @@ type 'a thunk = unit -> 'a
    It should have type: 'a thunk list -> 'a list thunk
 *)
 
+let rec thunk_of_list f_lst = 
+   fun () -> match f_lst with
+             | [] -> []
+             | hd::tl -> hd ()::thunk_of_list tl ()
 
 
 
