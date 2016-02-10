@@ -168,13 +168,12 @@ let rec insert (sym_tbl, in_sym, in_v) =
                    else if in_sym = s 
                         then (in_sym, in_v)::[]
                         else (s, v)::(in_sym, in_v)::[]
-   | (s, v)::tl -> match tl with
-                  | [] -> []
-                  | (s_ahead, v_ahead)::tl' -> if in_sym < s
-                                               then (in_sym, in_v)::(s, v)::insert(tl, s_ahead, v_ahead)
-                                               else if in_sym = s
-                                                    then (in_sym, in_v)::insert(tl, s_ahead, v_ahead)
-                                                    else (s, v)::insert(tl, in_sym, in_v) 
+   | (s, v)::(s_ahead, v_ahead)::tl -> let tl' = (s_ahead, v_ahead)::tl in
+                                       if in_sym < s
+                                       then (in_sym, in_v)::(s, v)::insert(tl', s_ahead, v_ahead)
+                                       else if in_sym = s
+                                            then (in_sym, in_v)::insert(tl', s_ahead, v_ahead)
+                                            else (s, v)::insert(tl', in_sym, in_v) 
 
 (*
    Write a function `has` that takes as input a pair of a symbol table and a symbol
