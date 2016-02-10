@@ -189,9 +189,7 @@ let rec has (sym_tbl, s) =
    match sym_tbl with
    | [] -> false
    | (s', v)::[] -> s = s'
-   | (s', v)::tl -> if s' > s 
-                   then false 
-                   else s = s' || has (tl, s) 
+   | (s', v)::tl -> not (s' > s) && (s = s' || has (tl, s))
                         
 (*
    Write a function `lookup` that takes as input a pair of a symbol table and a
