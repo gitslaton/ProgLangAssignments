@@ -99,3 +99,6 @@ let t13c = keys [("a", 2)] = ["a"]
 
 
 let t14a = is_proper [("bar", 3); ("foo", 2)] = true
+let t14b = is_proper [("far", 3); ("boo", 2)] = false
+let t14c = is_proper [("far", 3)] = true
+let t14d = is_proper [("a", 1); ("b", 1); ("x", 3); ("c", 2)] = false

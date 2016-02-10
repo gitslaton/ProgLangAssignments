@@ -266,3 +266,8 @@ let rec keys sym_tbl =
    maintained that they keys appear in strictly increasing order.
    It should have type: 'a table -> bool
 *)
+let rec is_proper sym_tbl =
+   match sym_tbl with
+   | [] -> true
+   | hd::[] -> true
+   | (s, v)::(s', v')::tl -> s < s' && is_proper tl
