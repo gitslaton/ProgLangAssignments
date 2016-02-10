@@ -92,7 +92,7 @@ let thunk_of_pair (f, f') = fun () -> (f (), f' ())
    It should have type: 'a thunk * ('a -> 'b) -> 'b thunk
 *)
 
-let thunk_map (f, k) = fun () -> let i = f() in  k i 
+let thunk_map (f, k) = fun () -> let f_eval = f () in k f_eval 
 
 (*
    Write a function `thunk_of_list` that takes as input a list of `'a thunk`s and
@@ -160,7 +160,19 @@ let empty : 'a table = []   (* A more intuitive notation for the empty list/tabl
    It should have type: 'a table * symbol * 'a -> 'a table
 *)
 
-
+let rec insert (sym_tbl, in_sym, in_v) = 
+   match sym_tbl with
+   | [] -> [(in_sym, in_v)]
+   | (s, v)::[] -> if in_sym < s 
+                   then (in_sym, in_v)::(s, v)::[]
+                   else if in_sym = s 
+                        then (in_sym, in_v)::[]
+                        else (s, v)::(in_sym, v)::[]
+   | (s, v)::tl -> if in_sym < s
+                   then (in_sym, in_v)::insert(tl, in_sym, in_v)
+                   else if in_sym = s
+                        then (in_sym, in_v)::insert(tl, in_sym, in_v)
+                        else (s, v)::insert(tl, in_sym, in_v) 
 
 (*
    Write a function `has` that takes as input a pair of a symbol table and a symbol
@@ -214,11 +226,4 @@ let empty : 'a table = []   (* A more intuitive notation for the empty list/tabl
 *)
 
 
-
-(*
-   Write a function `is_proper` that takes as input a symbol table and returns
-   a boolean indicating if the table is "proper", namely if the invariant is
-   maintained that they keys appear in strictly increasing order.
-   It should have type: 'a table -> bool
-*)
 
