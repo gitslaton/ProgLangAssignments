@@ -185,12 +185,13 @@ let rec insert (sym_tbl, in_sym, in_v) =
    It should have type: 'a table * symbol -> bool
 *)
 
-let rec has (sym_tbl, in_sym) =
+let rec has (sym_tbl, s) =
    match sym_tbl with
    | [] -> false
-   | (s, v)::tl -> if s > in_sym 
+   | (s', v)::[] -> s = s'
+   | (s', v)::tl -> if s' > s 
                    then false 
-                   else s = in_sym || has (tl, in_sym) 
+                   else s = s' || has (tl, s) 
                         
 (*
    Write a function `lookup` that takes as input a pair of a symbol table and a
@@ -202,14 +203,14 @@ let rec has (sym_tbl, in_sym) =
    It should have type: 'a table * symbol -> 'a
 *)
 
-let rec lookup (sym_tbl, in_sym) = 
+let rec lookup (sym_tbl, s) = 
    match sym_tbl with
    | [] -> raise (Not_found)
-   | (s, v)::tl -> if in_sym = s
+   | (s', v)::tl -> if s' = s
                    then v
-                   else if s > in_sym
+                   else if s' > s
                         then raise (Not_found) 
-                        else lookup (tl, in_sym)
+                        else lookup (tl, s)
 
 (*
    Write a function `lookup_opt` that takes as input a pair of a symbol table and a
@@ -221,7 +222,14 @@ let rec lookup (sym_tbl, in_sym) =
    It should have type: 'a table * symbol -> 'a option
 *)
 
-
+let lookup_opt (sym_tbl, s) = 
+   match sym_tbl with
+   | [] -> None
+   | (s', v)::tl -> if s' = s
+                    then Some v
+                    else if s' > s
+                         then None
+                         else lookup_opt(tl, s)
 
 (*
    Write a function `delete` that takes as input a pair of a symbol table and a
@@ -231,7 +239,7 @@ let rec lookup (sym_tbl, in_sym) =
    It should have type: 'a table * symbol -> 'a table
 *)
 
-
+let delete (sym_tbl, s) = sym_tbl
 
 (*
    Write a function `keys` that takes as input a symbol table and returns a list
@@ -239,5 +247,4 @@ let rec lookup (sym_tbl, in_sym) =
    It should have type: 'a table -> symbol list
 *)
 
-
-
+let keys sym_tbl = ["s"]
