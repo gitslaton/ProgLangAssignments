@@ -121,7 +121,13 @@ type calc = Var
    - The empty list should result in the integer 0.
    - A non-empty list should NOT have an extra "+0" at the end. You will need to
    stop the recursion at a one-element list.
-   - If a "term" has zero coefficient, it should be skipped.
+   - If a "term" has zero coefficient, it should be skipped. But if all terms have
+   zero coefficient you should still be getting a "Int 0". The cleanest way to
+   ensure this behavior is to "remove a term with a zero coefficient if it is not
+   the first term in the list, or if it is the first term but followed by a
+   non-zero term".
+   You can do this problem with recursion and a single pattern match with about 6
+   cases.
    It should have type: (int * int) list -> calc
 *)
 
