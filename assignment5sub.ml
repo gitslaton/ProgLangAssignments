@@ -48,6 +48,14 @@ type calc = Var
    It should have type calc -> bool
 *)
 
+let rec has_vars c = 
+   match c with
+   | Var -> true
+   | Int _  -> false
+   | Parity c1 -> has_vars c1
+   | Sub (c1, c2)
+   | Mul (c1, c2)
+   | Add (c1, c2) -> has_vars c1 || has_vars c2 
 
 (*
    Write a function `count_vars` that takes as input a calculation and returns the
@@ -55,6 +63,16 @@ type calc = Var
    It should have type: calc -> int
 *)
 
+let count_vars c = 
+   let rec acc n c' = 
+      match c' with
+      | Var -> n + 1
+      | Int _  -> n
+      | Parity c1 -> acc n c1
+      | Sub (c1, c2)
+      | Mul (c1, c2)
+      | Add (c1, c2) -> acc n c1 + acc n c2
+   in acc 0 c
 
 (*
    Write a function `calc_eval` that takes as input a pair of a calculation and an
@@ -63,6 +81,16 @@ type calc = Var
    It should have type: calc * int -> int
 *)
 
+let rec calc_eval (c, x) = 
+   match c with
+   | Var -> x
+   | Int n -> n
+   | Add(c1, c2) -> calc_eval (c1, x) + calc_eval(c2, x)
+   | Sub (c1, c2) -> calc_eval (c1, x) - calc_eval(c2, x)
+   | Mul (c1, c2) -> calc_eval (c1, x) * calc_eval(c2, x)
+   | Parity c1 -> if (calc_eval (c1, x)) mod 2 = 0
+                  then 0
+                  else 1 
 
 
 (*
@@ -73,8 +101,7 @@ type calc = Var
    It should have type: calc -> (int -> int)
    (though the parentheses will not show)
 *)
-
-
+let func_of_calc c x = calc_eval (c, x)
 
 (*
    Write a function `subst` that takes as input a pair of calculations (c1, c2)
@@ -83,7 +110,14 @@ type calc = Var
    It should have type: calc * calc -> calc
 *)
 
-
+let rec subst (c, c') =
+   match c' with
+   | Var -> c
+   | Int x  -> Int x
+   | Parity c1 -> subst (c, c1) 
+   | Sub (c1, c2) -> Sub (subst(c, c1), subst(c, c2))
+   | Mul (c1, c2) -> Mul (subst(c, c1), subst(c, c2))
+   | Add (c1, c2) -> Add (subst(c, c1), subst(c, c2))
 
 (*
    Write a function `power` that takes as input a pair of a calculation and an
@@ -97,6 +131,12 @@ type calc = Var
    It should have type: calc * int -> calc
 *)
 
+let rec power (c, i) =
+   if i = 1
+   then c
+   else if i = 0
+        then Int 1 
+        else Mul(power (c, i - 1), c)
 
 
 (*
@@ -111,13 +151,19 @@ type calc = Var
    It should have type: int * int -> calc
 *)
 
+let term (a, n) = 
+   match (a, n) with
+   | (0, _) -> Int 0
+   | (_, 0) -> Int a
+   | (1, _) -> power (Var, n)
+   | (_, _) -> Mul (Int a, power (Var, n))
 
 (*
    Write a function `poly` that takes as input a list of pairs of integers
    representing terms as in the previous function, and returns the "polynomial"
    that results from adding these terms. For example `poly [(2, 3), (1, 1), (3, 0)]`
    should result in the calculation representing "2x^3 + x + 3".
-   Special cases:
+   Special cases: 2*3^1 + 1 * 3 ^ 0 = 
    - The empty list should result in the integer 0.
    - A non-empty list should NOT have an extra "+0" at the end. You will need to
    stop the recursion at a one-element list.
@@ -130,6 +176,16 @@ type calc = Var
    cases.
    It should have type: (int * int) list -> calc
 *)
+ 
+ let rec poly lsts = 
+   match lsts with
+   | [] -> Int 0
+   | (0, _)::(0, _)::tl -> poly tl
+   | (0, _)::(x, y)::[] -> term (x, y)
+   | (0, _)::tl -> poly tl
+   | (x, y)::(0, _)::[] -> term (x, y)
+   | (x, y)::[] -> term (x, y)
+   | (x, y)::tl -> Add(term (x, y), poly tl)
 
 
 
@@ -179,20 +235,57 @@ type calc = Var
    - You should detect expressions of any of the four forms
    `b*a + a`, `a*b + a`, `a + b*a`, `a + a*b` and factor out the common factor.
    Make sure to preserve the order of terms on this step.
-
 *)
-(* This function stub is commented out for now so as not to throw errors when
-   you work on the previous part. Delete the comment part when you want to start
-   working on this function.
+
 
 let rec simplify c =
    let c' =
-      match c with
-      | Var -> ...        (* this one's easy *)
-      | Int i -> ...      (* so is this *)
-      | Add ... -> ...    (* special add case here *)
+      match c with (* man, this is really ugly - use inner matches to clean up efficiency and readability *)
+      | Var -> Var        
+      | Int i -> c      
+
+      | Add (c2, Int 0)
+      | Add (Int 0, c2) -> simplify c2
+      | Add (Int x, Int y)-> Int (x + y)    (* special add case here *)
+      | Add (c1, Int y) -> Add (Int y, simplify c1)
+      | Add (c1, Add (n, m)) -> Add (Add (simplify c1, simplify n), simplify m)
+(*      | Add (Mul (x, y), Mul (n, m)) -> let x' = simplify x
+                                         in let y' = simplify y
+                                         in let n' = simplify n
+                                         in let m' = simplify m
+                                         in if x' = n'
+                                            then Mul (x', Add(y', m'))
+                                            else if m' = y'
+                                            then Mul (Add (x', n'), y')
+                                            else if x' = m'
+                                            then Mul (x', Add (y', n'))
+                                            else if y' = n'
+                                            then Mul (x', Add(x', m')) 
+*)
       | Add (c1, c2) -> Add (simplify c1, simplify c2)
+
+      | Sub (Int 0, Int x) -> Int (-x)
+      | Sub (Int x, Int y) -> Int (x - y)
+      | Sub (c1, Int 0) -> simplify c1
+      | Sub (c1, Int x) -> Add (simplify c1, Int x)
+
+      | Sub (c1, c2) -> Sub (simplify c1, simplify c2)
+
+
+      | Mul (Int 0, _)
+      | Mul (_, Int 0) -> Int 0
+      | Mul (Int 1, _)
+      | Mul (_, Int 1) -> simplify c
+      | Mul (Int x, Int y) -> Int (x * y)
+      | Mul (c1, Int y) -> Mul (Int y, simplify c1)
+      | Mul (c1, Mul (n, m)) -> Mul (Mul (simplify c1, simplify n), simplify m)
+
+      | Mul (c1, c2) -> Mul (simplify c1, simplify c2)
+
+
+      | Parity (Int x) -> if x mod 2 = 0 then Int 0 else Int 1
+      | Parity (c1) -> Parity (simplify c1)
+ 
    (* more cases here. Do not use the catchall *)
    in if c' = c then c' else simplify c'
 
-*)

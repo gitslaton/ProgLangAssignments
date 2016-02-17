@@ -12,7 +12,7 @@ let t11a = func_of_calc (Add (Var, Int 2)) 3 = 5
 let t12a = subst (Add (Var, Int 1), Mul (Var, Var)) =
                 Mul (Add (Var, Int 1), Add (Var, Int 1))
 
-let t13a = power 3 = Mul (Mul (Var, Var), Var)
+let t13a = power (Var, 3) = Mul (Mul (Var, Var), Var)
 
 let t14a = term (2, 1) = Mul(Int 2, Var)
 
