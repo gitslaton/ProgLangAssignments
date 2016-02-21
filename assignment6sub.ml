@@ -205,3 +205,37 @@ let take1 (St th) =      (* Pattern match on the stream variant. *)
    It should have type: `'a list stream -> 'a stream`,
 *)
 
+
+(*
+   Write a function `list_combos` that takes as input a `'a stream` st1 and a `'b stream`,
+   st2 and produces a `('a * 'b) list stream` st as follows: The n-th value of the result
+   stream st will consist a list of all pairs `(x, y)` where `x` is the i-th element of the
+   st1 and `y` is the j-th element of st2, and so that i + j = n + 1. So if st1 consists of
+   the elements a1,a2,a3,... and st2 consists of b1,b2,b3,... then the result stream will
+   have as its first element the 1-element list [(a1, b1)], as its second element the two-
+   element list [(a2, b1); (a1, b2)], as its third element the three-element list
+   [(a3, b1); (a2, b2); (a1, b3)] and so on. You will probably find it convenient to use a
+   function that builds the "next state of the stream" by taking as inputs the lists
+   [a_n; a_n-1; ...; a2; a1] and [b_n; b_n-1; ...; b2; b1] of the "elements seen so far"
+   and also the current states of the provided streams (which when called would give the
+   next entries a_n+1 and b_n+1). It then expands these lists by providing the next entries,
+   uses List.rev and List.combine to create the list to be returned, and creates the appropriate
+   call to itself to use as the next stream.
+   This one is a bit harder. Make sure to check:
+   http://caml.inria.fr/pub/docs/manual-ocaml/libref/List.html
+   for the documentation on the methods List.rev and List.combine.
+   Reference solution is 7 lines.
+   It should have type: 'a stream -> 'b stream -> ('a * 'b) list stream
+*)
+
+
+
+(*
+   Write a function `list_combos_flat` that takes the same inputs as `list_combos` but
+   instead returns the individual pairs as results, rather than lists. It should be simply a
+   combination of `list_combos` together with the earlier method `flatten`. A very short
+   solution.
+   It should have type: 'a stream -> 'b stream -> ('a * 'b) stream
+*)
+
+
