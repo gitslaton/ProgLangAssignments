@@ -151,20 +151,19 @@ let rec take x (St st) =
       else v::(take (x - 1) st') (* Call the corresponding thunk to get value and the remaining stream *)
 
 
-
 (*
    Write a function `drop` that takes as input a number `n` and a stream `st` and
    returns a new stream where the first n elements of the original stream are dropped.
    So for instance when n<=0 the original stream would be returned.
    It should have type `int -> 'a stream -> 'a stream`.
 *)
-(*
+
 let rec drop n (St st) =
     if n <= 0
-    then st
+    then St st
     else let (v, st') = st () 
          in (drop (n-1) st')
-*)
+
 (*
    Write a function `prepend` that takes as input a `'a list` and a `'a stream` and
    returns an `'a stream` that will first go through the list and then continue with
