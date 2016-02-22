@@ -17,11 +17,16 @@ let t4a = take 5 (from_f (fun x -> x * x)) = [1; 4; 9; 16; 25]
    value is actually needed. *)
 let t4b = try (ignore (from_f (fun _ -> raise (Failure ""))); true) with
           | _ -> false
+let t4c = take 1 (from_f (fun x -> x)) = [1]
+let t4d = take 3 (from_f (fun x -> x + 1)) = [2; 3; 4]
+
 
 let t5a = take 5 (from_list [3; 5; 6]) = [3; 5; 6; 3; 5]
-
+let t5b = take 10 (from_list [1;2;3]) = [1;2;3;1;2;3;1;2;3;1]
+let t5c = take 4 (from_list [0]) = [0;0;0;0]
+(*
 let t6a = take 3 (drop 3 (seq 2 6)) = [20; 26; 32]
-
+*)
 let t7a = take 6 (prepend [1; 2] (const 3)) = [1; 2; 3; 3; 3; 3]
 
 let t8a = take 6 (map (fun x -> x * x) (seq 1 1)) = [1; 4; 9; 16; 25; 36]
