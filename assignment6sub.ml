@@ -115,7 +115,6 @@ let from_f f =
       St (fun () -> (f n, (next_f (n+1)))) 
       in next_f 1
 
-
 (*
    Write a function `from_list` that takes as input an `'a list` and returns a stream
    that produces the elements in the list one at a time, then starts all over. For
@@ -124,7 +123,6 @@ let from_f f =
    in search of the (nonexistent) next value, and that is OK.
    It should have type `'a list -> 'a stream`.
 *)
-
 
 let rec from_list lst =
   match lst with 
@@ -145,7 +143,6 @@ let rec from_list lst =
    returns a list of the first n elements of the stream (and the empty list if n<=0).
    It should have type `int -> 'a stream -> 'a list`.
 *)
-
 
 let rec take x (St st) =
    let (v, st') = st ()
