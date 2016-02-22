@@ -1,9 +1,16 @@
 (* These tests assume that you have implemented the function `take` as suggested *)
 let t1a = take 4 (const 3) = [3; 3; 3; 3]
+let t1b = take (-1) (const 0) = []
+let t1c = take 0 (const (-1)) = []
 
 let t2a = take 5 (alt 3 4) = [3; 4; 3; 4; 3]
+let t2b = take 2 (alt 0 1) = [0; 1]
+let t2c = take 1 (alt 2 2) = [2]
+let t2d = take 3 (alt 5 5) = [5; 5; 5]
 
 let t3a = take 3 (seq 2 6) = [2; 8; 14]
+let t3b = take 2 (seq 1 1) = [1;2]
+let t3c = take 4 (seq 0 0) = [0; 0; 0; 0]
 
 let t4a = take 5 (from_f (fun x -> x * x)) = [1; 4; 9; 16; 25]
 (* The next test ensures that the function is not called until the corresponding
