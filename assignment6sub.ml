@@ -90,7 +90,8 @@ let const a =
    It should have type `'a -> 'a -> 'a stream`.
 *)
 
-let rec alt v w = St (fun () -> (v, alt w v)) (* shout out to Hoang for potining out that this format works*)
+let rec alt v w = 
+   St (fun () -> (v, alt w v)) (* shout out to Hoang for potining out that this format works. My previous implementation was...not pretty*)
 
 
 (*
@@ -102,11 +103,18 @@ let rec alt v w = St (fun () -> (v, alt w v)) (* shout out to Hoang for potining
 
 let rec seq x step =
    St (fun () -> (x, (seq (x + step) step)))
+
 (*
    Write a function `from_f` that takes as input a function `int -> 'a` and returns
    an `'a stream` that produces in turn the values f 1, f 2, f 3 and so on.
    It should have type `(int -> 'a) -> 'a stream`.
 *)
+
+let from_f f = 
+   let rec next_f n = 
+      St (fun () -> (f n, (next_f (n+1)))) 
+      in next_f 1
+
 
 (*
    Write a function `from_list` that takes as input an `'a list` and returns a stream
@@ -118,6 +126,17 @@ let rec seq x step =
 *)
 
 
+let rec from_list lst =
+  match lst with 
+     | rl_hd::rl_tl -> 
+        let rec from_list' lst' = 
+            St (fun () -> 
+                match lst' with 
+                | hd::tl -> (hd, from_list' tl) 
+                | [] -> (rl_hd, from_list' rl_tl))
+            in from_list' lst
+      | [] -> from_list lst
+
 (* Stream users. These functions take as input a stream, and either produce some value
    or a new stream.
 *)
@@ -127,8 +146,9 @@ let rec seq x step =
    It should have type `int -> 'a stream -> 'a list`.
 *)
 
-let rec take x (St th) =
-   let (v, st') = th ()
+
+let rec take x (St st) =
+   let (v, st') = st ()
    in if x <= 0
       then []
       else v::(take (x - 1) st') (* Call the corresponding thunk to get value and the remaining stream *)
@@ -141,15 +161,26 @@ let rec take x (St th) =
    So for instance when n<=0 the original stream would be returned.
    It should have type `int -> 'a stream -> 'a stream`.
 *)
-
-
+(*
+let rec drop n (St st) =
+    if n <= 0
+    then st
+    else let (v, st') = st () 
+         in (drop (n-1) st')
+*)
 (*
    Write a function `prepend` that takes as input a `'a list` and a `'a stream` and
    returns an `'a stream` that will first go through the list and then continue with
    the provided stream.
    It should have type: `'a list -> 'a stream -> 'a stream`.
 *)
-
+(*
+let rec prepend lst (St st) = 
+   St (fun () -> 
+       match lst with
+       | [] -> let (v, st') = st () in (v, prepend [] st')
+       | hd::tl -> (hd, prepend tl st))
+*)
 
 (*
    Write a function `map` that takes as input a function `'a -> 'b` and a `'a stream`,
