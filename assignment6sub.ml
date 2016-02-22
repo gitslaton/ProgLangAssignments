@@ -80,6 +80,9 @@ let take1 (St th) =      (* Pattern match on the stream variant. *)
    It should have type `'a -> 'a stream`.
 *)
 
+let const a = 
+   let rec th () = (a, St th)
+   in let (v, st) = th () in st
 
 (*
    Write a function `alt` that takes as input two values of some type `'a` and returns
@@ -87,6 +90,7 @@ let take1 (St th) =      (* Pattern match on the stream variant. *)
    It should have type `'a -> 'a -> 'a stream`.
 *)
 
+let rec alt v w = St (fun () -> (v, alt w v)) (* shout out to Hoang for potining out that this format works*)
 
 
 (*
@@ -96,7 +100,8 @@ let take1 (St th) =      (* Pattern match on the stream variant. *)
    It should have type `int -> int -> int stream`
 *)
 
-
+let rec seq x step =
+   St (fun () -> (x, (seq (x + step) step)))
 (*
    Write a function `from_f` that takes as input a function `int -> 'a` and returns
    an `'a stream` that produces in turn the values f 1, f 2, f 3 and so on.
@@ -121,6 +126,13 @@ let take1 (St th) =      (* Pattern match on the stream variant. *)
    returns a list of the first n elements of the stream (and the empty list if n<=0).
    It should have type `int -> 'a stream -> 'a list`.
 *)
+
+let rec take x (St th) =
+   let (v, st') = th ()
+   in if x <= 0
+      then []
+      else v::(take (x - 1) st') (* Call the corresponding thunk to get value and the remaining stream *)
+
 
 
 (*
