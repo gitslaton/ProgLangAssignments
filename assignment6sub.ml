@@ -219,11 +219,13 @@ let rec zip2 (St a_th) (St b_th) =
    Write a function `accum` that takes as input a function `'b -> 'a -> 'b`, an initial
    value of type `'b` and an `'a` stream, and produces a `'b stream` that at each step
    accumulates (folds) the values up to that point. For instance if the initial
-   steam is 1, 2, 3, 4, 5, ... and the function is addition with an initial value of 5,
+   stream is 1, 2, 3, 4, 5, ... and the function is addition with an initial value of 5,
    then the resulting stream would be 5, 6, 8, 11, 15, 20, ...
    It should have type `('b -> 'a -> 'b) -> 'b -> 'a stream -> 'b stream`.
 *)
 
+let rec accum f b (St th) =
+   St (fun () -> let (v, st') = th() in (b, accum f (f b v) st'))
 
 (*
    Write a function `filter` that takes as input a predicate function `'a -> bool` and
