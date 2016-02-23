@@ -257,9 +257,9 @@ let rec collect n in_st =
       then ([], (St th))
       else let (v, st) = th () 
       in match n_list (x-1) st with
-         | (lst, st') -> (v::lst, st')
+         | (ele, st') -> (v::ele, st')
    in match n_list n in_st with
-      | (v, st) -> St (fun () -> (v, collect n st)) 
+      | (lst, st) -> St (fun () -> (lst, collect n st)) 
 
 (*
    Write a function `flatten` that takes as input a `'a list stream` and "flattens" it
@@ -271,7 +271,12 @@ let rec collect n in_st =
    It should have type: `'a list stream -> 'a stream`,
 *)
 
-let rec flatten st = st;
+let rec flatten (St lst_th) = 
+   let rec lst_retrv lst (St th) =
+      match lst with
+      | hd::tl -> St (fun () -> (hd, lst_retrv tl (St th)))
+      | [] -> let (v, st) = th () in lst_retrv v st
+   in let (v', st') =  lst_th () in lst_retrv v' st'
 
 (*
    Write a function `list_combos` that takes as input a `'a stream` st1 and a `'b stream`,
