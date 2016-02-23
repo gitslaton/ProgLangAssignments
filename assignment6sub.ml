@@ -158,11 +158,11 @@ let rec take x (St st) =
    It should have type `int -> 'a stream -> 'a stream`.
 *)
 
-let rec drop n (St st) =
+let rec drop n (St th) =
     if n <= 0
-    then St st
-    else let (v, st') = st () 
-         in (drop (n-1) st')
+    then St th
+    else let (v, st) = th () 
+         in (drop (n-1) st)
 
 (*
    Write a function `prepend` that takes as input a `'a list` and a `'a stream` and
@@ -170,13 +170,12 @@ let rec drop n (St st) =
    the provided stream.
    It should have type: `'a list -> 'a stream -> 'a stream`.
 *)
-(*
-let rec prepend lst (St st) = 
-   St (fun () -> 
-       match lst with
-       | [] -> let (v, st') = st () in (v, prepend [] st')
-       | hd::tl -> (hd, prepend tl st))
-*)
+
+let rec prepend lst st =  
+    match lst with
+    | [] -> st
+    | hd::tl ->  St (fun () -> (hd, prepend tl st))
+
 
 (*
    Write a function `map` that takes as input a function `'a -> 'b` and a `'a stream`,
@@ -187,6 +186,9 @@ let rec prepend lst (St st) =
    It should have type `('a -> 'b) -> 'a stream -> 'b stream`.
 *)
 
+let rec map f (St th) = 
+   let (v, st') = th () 
+   in St (fun () -> (f v, map f st'))
 
 (*
    Write a function `pair_up` that takes as input a `'a stream` and returns a
