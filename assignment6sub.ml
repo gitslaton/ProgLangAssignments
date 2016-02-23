@@ -260,7 +260,7 @@ let rec collect n in_st =
          | (lst, st') -> (v::lst, st')
    in match n_list n in_st with
       | (v, st) -> St (fun () -> (v, collect n st)) 
-      
+
 (*
    Write a function `flatten` that takes as input a `'a list stream` and "flattens" it
    out, resulting in the stream that contains all the elements in the order they appear.
@@ -271,6 +271,7 @@ let rec collect n in_st =
    It should have type: `'a list stream -> 'a stream`,
 *)
 
+let rec flatten st = st;
 
 (*
    Write a function `list_combos` that takes as input a `'a stream` st1 and a `'b stream`,
