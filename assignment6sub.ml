@@ -225,7 +225,7 @@ let rec zip2 (St a_th) (St b_th) =
 *)
 
 let rec accum f b (St th) =
-   St (fun () -> let (v, st') = th() in (b, accum f (f b v) st'))
+   St (fun () -> let (v, st') = th () in (b, accum f (f b v) st'))
 
 (*
    Write a function `filter` that takes as input a predicate function `'a -> bool` and
@@ -236,6 +236,14 @@ let rec accum f b (St th) =
    value, if for example the predicate returns always false.
    It should have type `('a -> bool) -> 'a stream -> 'a stream`.
 *)
+
+let rec filter p (St th) =  
+      let (v, st) = th ()
+      in if (p v)
+         then St (fun () -> (v, filter p st))
+         else filter p st 
+
+
 
 
 (*
