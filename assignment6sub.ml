@@ -243,9 +243,6 @@ let rec filter p (St th) =
          then St (fun () -> (v, filter p st))
          else filter p st 
 
-
-
-
 (*
    Write a function `collect` that takes as input an integer `n > 0` and a `'a stream`
    and returns a `'a list stream` where each value is formed out of taking the next `n`
@@ -254,7 +251,16 @@ let rec filter p (St th) =
    It should have type `int -> 'a stream -> 'a list stream`.
 *)
 
-
+let rec collect n in_st =
+   let rec n_list x (St th) =
+      if x = 0
+      then ([], (St th))
+      else let (v, st) = th () 
+      in match n_list (x-1) st with
+         | (lst, st') -> (v::lst, st')
+   in match n_list n in_st with
+      | (v, st) -> St (fun () -> (v, collect n st)) 
+      
 (*
    Write a function `flatten` that takes as input a `'a list stream` and "flattens" it
    out, resulting in the stream that contains all the elements in the order they appear.
@@ -297,5 +303,4 @@ let rec filter p (St th) =
    solution.
    It should have type: 'a stream -> 'b stream -> ('a * 'b) stream
 *)
-
 
