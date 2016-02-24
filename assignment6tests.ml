@@ -36,6 +36,8 @@ let t8b = try (ignore (map (fun _ -> raise (Failure "")) (seq 1 1)); true) with
           | _ -> false
 
 let t9a = take 3 (pair_up (seq 1 1)) = [(1, 2); (3, 4); (5, 6)]
+let t9b = take 2 (pair_up (const 3)) = [(3, 3); (3, 3)]
+let t9c = take 1 (pair_up (prepend [0;0] (const 1))) = [(0, 0)]
 
 let t10a = take 3 (zip2 (seq 1 2) (seq 2 3)) = [(1, 2); (3, 5); (5, 8)]
 
