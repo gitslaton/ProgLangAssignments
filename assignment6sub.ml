@@ -303,7 +303,7 @@ let flatten (St lst_th) =
 let rec list_combos st1 st2 = 
    let rec make_next n =
          let a_lst = take n st1
-         in let b_lst = take n st2
+         in let b_lst = take n st2 (*not efficient since it makes new lists each time instead of keeping track of what the olds one were and just adding in the new entries. Oh well*)
          in St (fun () -> (List.rev (List.combine a_lst (List.rev b_lst)), make_next (n+1)))
    in make_next 1 
 
