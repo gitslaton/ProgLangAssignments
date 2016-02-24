@@ -271,7 +271,7 @@ let rec collect n in_st =
    It should have type: `'a list stream -> 'a stream`,
 *)
 
-let rec flatten (St lst_th) = 
+let flatten (St lst_th) = 
    let rec lst_retrv lst (St th) =
       match lst with
       | hd::tl -> St (fun () -> (hd, lst_retrv tl (St th)))
@@ -300,7 +300,17 @@ let rec flatten (St lst_th) =
    It should have type: 'a stream -> 'b stream -> ('a * 'b) list stream
 *)
 
-
+let rec list_combos (St th1) (St th2) = 
+   St (fun () ->
+       let rec list_build (St l_th) =
+         let (v1, st') = l_th () in
+            match list_build st' with
+                  | (ele, n_st) -> (v1::ele, n_st)
+       in let make_next a_lst b_lst st1 st2 =
+         (List.combine a_lst (List. rev b_lst), list_combos st1 st2)
+       in let (al, ast) = list_build (St th1) 
+       in let (bl, bst) = list_build (St th2) 
+       in make_next al bl ast bst)
 
 (*
    Write a function `list_combos_flat` that takes the same inputs as `list_combos` but
@@ -310,3 +320,4 @@ let rec flatten (St lst_th) =
    It should have type: 'a stream -> 'b stream -> ('a * 'b) stream
 *)
 
+let rec list_combos_flat st1 st2 = flatten (list_combos st1 st2)
