@@ -162,8 +162,8 @@ let mirror_horizontal pc = List.map (fun rw -> rw @ (List.rev rw)) pc
 
 
 let mirror_both pc = 
-   (List.map (fun rw -> (List.rev rw) @ rw) (List.rev pc)) 
-   @ (List.map (fun rw -> (List.rev) rw @ rw) pc)
+   (List.map (fun rw -> rw @ (List.rev rw)) (pc)) 
+   @ (List.map (fun rw -> rw @ (List.rev rw)) (List.rev pc))
 
 (*- Write a function `pixelate` that takes as input a function `f` of type `int -> int -> pixel` and two integers `m` and `n`, in that order, and produces a picture of `m` rows and `n` "columns". The pixel at the i-th row and j-th column (in other words the j-th pixel in the i-th row) is determined by the value of the function `f`. Use `tabulate` from earlier (in two places). Reference solution is 1-2 lines. Should have type: `(int -> int -> pixel) -> int -> int -> pic`*)
 
