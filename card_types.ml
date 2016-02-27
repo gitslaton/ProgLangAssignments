@@ -32,4 +32,8 @@ let rec hand_value (hnd : hand) =
       if n > 5
       then false
       else match hand_lst with
-           | hd::tl
+           | hd::
+
+
+
+           do a thing 
