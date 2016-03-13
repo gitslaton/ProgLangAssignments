@@ -15,8 +15,15 @@ let _ =
                                        print_newline();
                                        Lexing.flush_input lexbuf
         | Lexer.Eof                 -> output_string stdout "Exit code received";
+                                       print_newline();
                                        exit 0
         | Lexer.Unrecognized        -> output_string stdout "Unrecognized token error";
+                                       print_newline();
+                                       Lexing.flush_input lexbuf
+        | Desugar s                 -> output_string stdout ("Desugar error: " ^ s);
+                                       print_newline();
+                                       Lexing.flush_input lexbuf
+        | Interp s                  -> output_string stdout ("Interpret error: " ^ s);
                                        print_newline();
                                        Lexing.flush_input lexbuf
     done

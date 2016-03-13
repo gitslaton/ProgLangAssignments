@@ -7,7 +7,7 @@
 %nonassoc FLOAT
 
 %start main
-%type <Types.resultS> main
+%type <Types.exprS> main
 %%
 
 main:

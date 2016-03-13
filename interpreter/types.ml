@@ -1,9 +1,18 @@
-exception Desugar_failed
+exception Desugar of string      (* Use for desugarer errors *)
+exception Interp of string       (* Use for interpreter errors *)
 
-type resultS = NumS of float
-type resultC = NumC of float
-type 'a env = (string * 'a) list
+(* You will need to add more cases here. *)
+type exprS = NumS of float
+
+(* You will need to add more cases here. *)
+type exprC = NumC of float
+
+
+(* You will need to add more cases here. *)
 type value = Num of float
+
+type 'a env = (string * 'a) list
+let empty = []
 
 (* lookup : string -> 'a env -> 'a option *)
 let rec lookup str env = match env with
@@ -13,20 +22,29 @@ let rec lookup str env = match env with
 let bind str v env = (str, v) :: env
 
 
+(*
+   HELPER METHODS
+   You may be asked to add methods here. You may also choose to add your own
+   helper methods here.
+*)
 (* INTERPRETER *)
 
-(* desugar : resultS -> resultC *)
-let rec desugar expr = match expr with
+(* You will need to add cases here. *)
+(* desugar : exprS -> exprC *)
+let rec desugar exprS = match exprS with
   | NumS i        -> NumC i
 
-(* interp : Value env -> resultC -> value *)
+(* You will need to add cases here. *)
+(* interp : Value env -> exprC -> value *)
 let rec interp env r = match r with
   | NumC i        -> Num i
 
-(* evaluate : resultC -> val *)
+(* evaluate : exprC -> val *)
 let evaluate exprC = exprC |> interp []
 
 
 
+
+(* You will need to add cases to this function as you add new value types. *)
 let rec valToString r = match r with
   | Num i           -> string_of_float i
