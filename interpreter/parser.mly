@@ -3,6 +3,8 @@
 %}
 
 %token <float> FLOAT
+%token TRUE FALSE
+%token IF THEN ELSE
 %token DBLSEMI
 %nonassoc FLOAT
 
@@ -20,5 +22,7 @@ headEx:
 
 expr:
   | FLOAT                        { NumS $1 }
+  | TRUE						 {BoolS true}
+  | FALSE						 {BoolS false}
 ;
 

@@ -72,6 +72,21 @@ let sword = [
 [D;D;D;D;D;D;D;D;D;D;D;D;D;D;H;H];
 [D;D;D;D;D;D;D;D;D;D;D;D;D;D;H;H]]
 
+(*let test_pc = [
+[H;D;D];
+[D;H;D];
+[H;D;D]]
+
+
+H; D; H;
+D; H; D;
+D; D; D]
+
+H;D;D;D;H;D;H;D;D
+
+H;D;H;D;H;D;D;D;D
+
+*)
 
 let doodad = [
 [H;H;D;D;D;D;D;D;D;D;D;D;D;D;D;D;D;D;D;D;D;D;D;D;D;D;H;H];
@@ -167,7 +182,7 @@ let mirror_both pc =
 
 (*- Write a function `pixelate` that takes as input a function `f` of type `int -> int -> pixel` and two integers `m` and `n`, in that order, and produces a picture of `m` rows and `n` "columns". The pixel at the i-th row and j-th column (in other words the j-th pixel in the i-th row) is determined by the value of the function `f`. Use `tabulate` from earlier (in two places). Reference solution is 1-2 lines. Should have type: `(int -> int -> pixel) -> int -> int -> pic`*)
 
-let pixelate f m n = (* tabuluate: `(int -> 'a) -> int -> 'a list` *) 
+let pixelate f m n = (* tabulate: `(int -> 'a) -> int -> 'a list` *) 
    List.fold_right (fun i acc -> (tabulate (f i) n)::acc) (range1 m) []
 
 
@@ -191,4 +206,14 @@ let invert pc =
 
 (*- Write a function `transpose` that takes as input a picture and returns the result of "transposing" the picture, i.e. turning its rows into columns. This one is short but tricky. The reference solution is 4 lines and uses `List.fold_right`, `List.map` and `List.map2` along with a let binding and a conditional. Start by working out manually in a small example how a recursive implementation might function (but your final solution is not meant to be recursive; this would just help you figure out the kind of work that your `fold_right` would have to do). Should have type: `pic -> pic`*)
 
-let transpose pc = pc (* not even sure what to do here *)
+let transpose pc = pc
+  (*
+    let (x, y) = dims_pic pc
+    in let aux lst i = 
+      match lst with
+      | [] -> []
+      | hd::tl -> if i = y 
+                  then hd::(aux tl (y - 1))
+                  else aux tl (y - 1)
+    in let px_lst = List.fold_right (fun x acc -> x@acc) pc []
+    *)
