@@ -2,12 +2,12 @@ exception Desugar of string      (* Use for desugarer errors *)
 exception Interp of string       (* Use for interpreter errors *)
 
 (* You will need to add more cases here. *)
-type exprS = NumS of float |
+type exprS = NumS of float | ArithS of string * exprS * exprS |
              BoolS of bool | IfS of exprS * exprS * exprS | OrS of exprS * exprS | AndS of exprS * exprS | NotS of exprS
 
 (* You will need to add more cases here. *)
-type exprC = NumC of float | 
-             BoolC of bool | IfC of exprC * exprC * exprC | ArithC of string * exprC * exprC
+type exprC = NumC of float | ArithC of string * exprC * exprC |
+             BoolC of bool | IfC of exprC * exprC * exprC 
 
 
 (* You will need to add more cases here. *)
@@ -39,33 +39,41 @@ let rec desugar exprS =
   | NumS i                  -> NumC i
   | BoolS b 	              -> BoolC b
   | IfS (ifS, thenS, elseS) -> (match desugar ifS with
-                               | BoolC b -> if b then desugar thenS else desugar elseS
-                               | _ -> raise (Interp "not a bool!"))
-  | NotS (bS)              -> desugar (IfS (bS, BoolS false, BoolS true))
-  | OrS (ifS, ifS')          -> (match (desugar ifS, desugar ifS') with
+                                | BoolC b -> if b then desugar thenS else desugar elseS
+                                | _ -> raise (Desugar "not a bool!"))
+  | NotS (bS)               -> desugar (IfS (bS, BoolS false, BoolS true))
+  | OrS (ifS, ifS')         -> (match (desugar ifS, desugar ifS') with
                                 | (BoolC b, BoolC b') -> if b 
                                                          then BoolC true 
                                                          else if b'
                                                               then BoolC true
                                                               else BoolC false
-                                | _ -> raise (Interp "One or both expressions are not bools"))
-  | AndS (ifS, ifS')          -> (match (desugar ifS, desugar ifS') with
-                                  | (BoolC b, BoolC b') -> if b 
-                                                           then if b'
-                                                                then BoolC true
-                                                                else BoolC false 
-                                                           else BoolC false
-                                  | _ -> raise (Interp "One or both expressions are not bools"))
+                                | _ -> raise (Desugar "One or both expressions are not bools"))
+  | AndS (ifS, ifS')         -> (match (desugar ifS, desugar ifS') with
+                                 | (BoolC b, BoolC b') -> if b 
+                                                          then if b'
+                                                               then BoolC true
+                                                               else BoolC false 
+                                                          else BoolC false
+                                 | _ -> raise (Desugar "One or both expressions are not bools"))
+  | ArithS (op, eS1, eS2)     -> (let x = desugar eS1 in let y = desugar eS2 in
+                                 match (x, y) with
+                                 | (NumC _, _)
+                                 | (_, NumC _)
+                                 | (ArithC _, _)
+                                 | (_, ArithC _) -> ArithC (op, x, y)
+                                 | _ -> raise (Desugar "not valid arithmatic expressions"))
+
 
 let arithEval s ec1 ec2 = 
   match (ec1, ec2) with
-  | (Num x, Num y) -> (match s with
-                       | "+" -> x + y 
-                       | "-" -> x .- y
-                       | "*" -> x .* y
-                       | "/" -> if y .= 0.0 then raise (Interp "cannot divide by zero") else x ./ y
-                       | _ -> raise (Interp "not an allowed symbol!"))
-  | _ -> raise (Interp "not a num!") 
+  | (Num x, Num y) -> Num (match s with
+                           | "+" -> x +. y 
+                           | "-" -> x -. y
+                           | "*" -> x *. y
+                           | "/" -> if y = 0.0 then raise (Interp "cannot divide by zero") else x /. y
+                           | _ -> raise (Interp "not an allowed symbol"))
+  | _ -> raise (Interp "not a num") 
 
 (* You will need to add cases here. *)
 (* interp : Value env -> exprC -> value *)
@@ -73,12 +81,11 @@ let rec interp env r =
   match r with
   | NumC i        -> Num i
   | BoolC b 	  -> Bool b
-  | IfC (ifC, thenC, elseC) -> (match interp env ifC with
+  | IfC (ifC, thenC, elseC) -> let e = interp env ifC in
+                               (match e with
                                 | Bool b -> if b then interp env thenC else interp env elseC
-                                | _      -> raise (Interp "Not a bool"))
-  | ArithC (op, ec1, ec2) -> let x = interp env ec1 in let y = inter env ec2 in
-                             arithEval (op, x, y)
-
+                                | _  -> raise (Interp "nif tot a bool"))
+  | ArithC (op, ec1, ec2) -> let x = interp env ec1 in let y = interp env ec2 in arithEval op x y 
 
 
 

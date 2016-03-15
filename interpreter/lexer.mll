@@ -22,13 +22,17 @@ rule token = parse
   | newline     { token lexbuf }
   | dblsemi     { DBLSEMI }
   | float as x  { FLOAT (float_of_string x) }
-  | true   		{ TRUE }
-  | false  		{ FALSE }
-  | "if"		{ IF }
-  | "then"		{ THEN }
-  | "else"		{ ELSE }
-  | "and"		{ AND }
-  | "or"		{ OR }
-  | "not"		{ NOT }
+  | true   	  	{ TRUE }
+  | false    		{ FALSE }
+  | "if"		    { IF }
+  | "then"	  	{ THEN }
+  | "else"	   	{ ELSE }
+  | "and"	    	{ AND }
+  | "or"	    	{ OR }
+  | "not"		    { NOT }
+  | "+"         { PLUS }
+  | "-"         { MINUS }
+  | "*"         { TIMES }
+  | "/"         { DIVIDE }
   | eof         { raise Eof }
   | any         { raise Unrecognized }
