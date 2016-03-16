@@ -92,7 +92,7 @@ let rec interp env r =
   | IfC (ifC, thenC, elseC) -> let e = interp env ifC in
                                (match e with
                                 | Bool b -> if b then interp env thenC else interp env elseC
-                                | _  -> raise (Interp "nif tot a bool"))
+                                | _  -> raise (Interp "not a bool"))
   | ArithC (op, ec1, ec2)   -> let x = interp env ec1 in let y = interp env ec2 in arithEval op x y 
   | CompC (s, ec1, ec2)     -> let x = interp env ec1 in let y = interp env ec2 in compEval s x y
   | EqC (ec1, ec2)          -> let a = interp env ec1 in let b = interp env ec2 in eqEval a b 
