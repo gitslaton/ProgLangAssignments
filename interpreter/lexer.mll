@@ -34,5 +34,7 @@ rule token = parse
   | "-"         { MINUS }
   | "*"         { TIMES }
   | "/"         { DIVIDE }
+  | "=="		{ EQ }
+  | "!="		{ NEQ }
   | eof         { raise Eof }
   | any         { raise Unrecognized }

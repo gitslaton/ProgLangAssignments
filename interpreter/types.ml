@@ -3,11 +3,13 @@ exception Interp of string       (* Use for interpreter errors *)
 
 (* You will need to add more cases here. *)
 type exprS = NumS of float | ArithS of string * exprS * exprS |
-             BoolS of bool | IfS of exprS * exprS * exprS | OrS of exprS * exprS | AndS of exprS * exprS | NotS of exprS
-
+             BoolS of bool | IfS of exprS * exprS * exprS | 
+             OrS of exprS * exprS | AndS of exprS * exprS | NotS of exprS |
+             EqS of exprS * exprS | NeqS of exprS * exprS
 (* You will need to add more cases here. *)
 type exprC = NumC of float | ArithC of string * exprC * exprC |
-             BoolC of bool | IfC of exprC * exprC * exprC 
+             BoolC of bool | IfC of exprC * exprC * exprC |
+             EqC of exprC * exprC 
 
 
 (* You will need to add more cases here. *)
@@ -63,7 +65,8 @@ let rec desugar exprS =
                                  | (ArithC _, _)
                                  | (_, ArithC _) -> ArithC (op, x, y)
                                  | _ -> raise (Desugar "not valid arithmatic expressions"))
-
+  | EqS (eS1, eS2)			 -> EqC (desugar eS1, desugar eS2)
+  | NeqS (eS1, eS2)			 -> (NotS (EqS (eS1, eS2)))
 
 let arithEval s ec1 ec2 = 
   match (ec1, ec2) with
@@ -75,6 +78,11 @@ let arithEval s ec1 ec2 =
                            | _ -> raise (Interp "not an allowed symbol"))
   | _ -> raise (Interp "not a num") 
 
+let eqEval ec1 ec2 = 
+	match (ec1, ec2) with
+	| (Num x, Num y) -> Bool (x = y)
+	| (Bool a, Bool b) -> Bool (a = b)
+	| _ -> Bool false
 (* You will need to add cases here. *)
 (* interp : Value env -> exprC -> value *)
 let rec interp env r =
@@ -86,8 +94,7 @@ let rec interp env r =
                                 | Bool b -> if b then interp env thenC else interp env elseC
                                 | _  -> raise (Interp "nif tot a bool"))
   | ArithC (op, ec1, ec2) -> let x = interp env ec1 in let y = interp env ec2 in arithEval op x y 
-
-
+  | EqC (ec1, ec2) -> let a = interp env ec1 in let b = interp env ec2 in eqEval a b 
 
 (* evaluate : exprC -> val *)
 let evaluate exprC = exprC |> interp []
