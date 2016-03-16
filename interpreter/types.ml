@@ -34,29 +34,6 @@ let bind str v env = (str, v) :: env
    You may be asked to add methods here. You may also choose to add your own
    helper methods here.
 *)
-(* INTERPRETER *)
-
-(* You will need to add cases here. *)
-(* desugar : exprS -> exprC *)
-let rec desugar exprS = 
-  match exprS with
-  | NumS i                    -> NumC i
-  | BoolS b 	              -> BoolC b
-  | IfS (ifS, thenS, elseS)   -> IfC (desugar ifS, desugar thenS, desugar elseS)
-  | NotS (bS)                 -> desugar (IfS (bS, BoolS false, BoolS true))
-  | OrS (ifS, ifS')           -> desugar (IfS (ifS, BoolS true, (IfS (ifS', BoolS true, BoolS false))))
-  | AndS (ifS, ifS')          -> desugar (IfS (ifS, (IfS (ifS', BoolS true, BoolS false)), BoolS false))
-  | ArithS (op, eS1, eS2)     -> (let x = desugar eS1 in let y = desugar eS2 in
-                                  match (x, y) with
-                                  | (NumC _, _)
-                                  | (_, NumC _)
-                                  | (ArithC _, _)
-                                  | (_, ArithC _) -> ArithC (op, x, y)
-                                  | _ 			  -> raise (Desugar "not valid arithmatic expressions"))
-  | CompS (op, eS1, eS2)	  -> (let x = desugar eS1 in let y = desugar eS2 in CompC (op, x, y))
-  | EqS (eS1, eS2)			  -> EqC (desugar eS1, desugar eS2)
-  | NeqS (eS1, eS2)			  -> desugar (NotS (EqS (eS1, eS2)))
-
 let arithEval s e1 e2 = 
   match (e1, e2) with
   | (Num x, Num y) -> Num (match s with
@@ -82,6 +59,30 @@ let eqEval e1 e2 =
 	| (Num x, Num y)   -> Bool (x = y)
 	| (Bool a, Bool b) -> Bool (a = b)
 	| _                -> Bool false
+(* INTERPRETER *)
+
+(* You will need to add cases here. *)
+(* desugar : exprS -> exprC *)
+let rec desugar exprS = 
+  match exprS with
+  | NumS i                    -> NumC i
+  | BoolS b 	              -> BoolC b
+  | IfS (ifS, thenS, elseS)   -> IfC (desugar ifS, desugar thenS, desugar elseS)
+  | NotS (bS)                 -> desugar (IfS (bS, BoolS false, BoolS true))
+  | OrS (ifS, ifS')           -> desugar (IfS (ifS, BoolS true, (IfS (ifS', BoolS true, BoolS false))))
+  | AndS (ifS, ifS')          -> desugar (IfS (ifS, (IfS (ifS', BoolS true, BoolS false)), BoolS false))
+  | ArithS (op, eS1, eS2)     -> (let x = desugar eS1 in let y = desugar eS2 in
+                                  match (x, y) with
+                                  | (NumC _, _)
+                                  | (_, NumC _)
+                                  | (ArithC _, _)
+                                  | (_, ArithC _) -> ArithC (op, x, y)
+                                  | _ 			  -> raise (Desugar "not valid arithmatic expressions"))
+  | CompS (op, eS1, eS2)	  -> (let x = desugar eS1 in let y = desugar eS2 in CompC (op, x, y))
+  | EqS (eS1, eS2)			  -> EqC (desugar eS1, desugar eS2)
+  | NeqS (eS1, eS2)			  -> desugar (NotS (EqS (eS1, eS2)))
+
+
 (* You will need to add cases here. *)
 (* interp : Value env -> exprC -> value *)
 let rec interp env r =
