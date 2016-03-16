@@ -23,21 +23,9 @@ let t0d = evaluate (desugar (NumS 2.3)) = Num 2.3
 let t1e = evaluate (desugar (BoolS false)) = Bool false
 (* normal evaluation and desugaring *)
 let t2a =  evaluate (IfC (BoolC true, NumC 2.3, NumC 4.3)) = Num 2.3 
-let t2b = evaluate (IfC (BoolC false, NumC 2.3, NumC 4.3)) = Num 4.3
-let t2c = desugar (NotS (BoolS false)) = BoolC true
-let t2l = desugar (NotS (BoolS true)) = BoolC false
 
-(* test comparison C and S *)
+(* test and or not C and S *)
 
-let t2d = desugar (AndS (BoolS true, BoolS true)) = BoolC true
-let t2e = desugar (AndS (BoolS false, BoolS true)) = BoolC false
-let t2f = desugar (AndS (BoolS true, BoolS false)) = BoolC false
-let t2g = desugar (AndS (BoolS false, BoolS false)) = BoolC false
-
-let t2h = desugar (OrS (BoolS true, BoolS false)) = BoolC true
-let t2i = desugar (OrS (BoolS false, BoolS true)) = BoolC true
-let t2j = desugar (OrS (BoolS false, BoolS false)) = BoolC false
-let t2k = desugar (OrS (BoolS true, BoolS true)) = BoolC true
 (*test arith C and S*)
 let t3a = evaluate (ArithC ("+", NumC 1.0, NumC 2.0)) = Num 3.0
 let t3b = evaluate (ArithC ("-", NumC 10.0, NumC 3.0)) = Num 7.0
