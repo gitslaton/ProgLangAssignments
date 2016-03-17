@@ -48,10 +48,10 @@
 ;; The reference solution is 5 lines.
 
 (define (every-other lst)
-  (cond [(null? lst) lst]
-        [(null? (cdr lst)) (car lst)]
-        [(null? (cdr (cdr lst))) (car lst)]
-        [#t (list (car lst) (every-other (cdr (cdr lst))))]))
+  (cond [(null? lst) null]
+        [(or (null? (cdr lst)) (null? (cdr (cdr lst))))
+             (cons (car lst) null)]
+        [#t (cons (car lst) (every-other (cdr (cdr lst))))]))
 
 
 ;; Write a function `map`. It takes two arguments: a function and a list. It then
@@ -59,16 +59,19 @@
 ;; The reference solution is 5 lines.
 
 (define (map f lst)
-  (cond [(null? lst) lst]
-        [#t (list (f (car lst)))]))
+  (cond [(null? lst) null]
+        [(null? (cdr lst)) (cons (f (car lst)) null)]
+        [#t (cons (f (car lst)) (map f (cdr lst)))]))
 
 ;; Write a function `map2`. It takes three arguments: a function that takes two inputs
 ;; and two lists. It then creates a single new list by applying the function to pairs
 ;; of values one from each list. The process stops when one of the lists is empty.
 ;; The reference solution is 5 lines.
 
-(define (map2 f2 lst1 lst2)
-  
+(define (map2 f lst1 lst2)
+  (cond [(or (null? lst1) (null? lst2)) null]
+        [(or (null? (cdr lst1)) (null? (cdr lst2))) (cons (f (car lst1) (car lst2)) null)]
+        [#t (cons (f (car lst1) (car lst2)) (map2 f (cdr lst1) (cdr lst2)))]))
 
 ;; Write a function `filter`. It takes as input a function and a list and returns
 ;; a new list consisting of those elements for which the function does not return #f
