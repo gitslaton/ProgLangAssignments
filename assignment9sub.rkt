@@ -70,7 +70,8 @@
 
 (define (map2 f lst1 lst2)
   (cond [(or (null? lst1) (null? lst2)) null]
-        [(or (null? (cdr lst1)) (null? (cdr lst2))) (cons (f (car lst1) (car lst2)) null)]
+        [(or (null? (cdr lst1)) (null? (cdr lst2)))
+             (cons (f (car lst1) (car lst2)) null)]
         [#t (cons (f (car lst1) (car lst2)) (map2 f (cdr lst1) (cdr lst2)))]))
 
 ;; Write a function `filter`. It takes as input a function and a list and returns
@@ -78,7 +79,9 @@
 ;; The reference solution is 5 lines.
 
 (define (filter f lst)
-  lst)
+  (cond [(null? lst) null]
+        [(f (car lst)) (cons (car lst) (filter f (cdr lst)))]
+        [#t (filter f (cdr lst))]))
 
 ;; Write a function `call-all`. It takes as input a list of "thunks", and returns a
 ;; list of the results of calling those thunks. To call a function, you put it as the
@@ -86,4 +89,5 @@
 ;; The reference solution is 4 lines.
 
 (define (call-all th_lst)
-  th_lst)
+  (cond [(null? th_lst) null]
+        [#t (cons ((car th_lst)) (call-all (cdr th_lst)))]))
