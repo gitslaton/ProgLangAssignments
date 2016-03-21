@@ -78,7 +78,7 @@ let rec desugar exprS =
                                   | (ArithC _, _)
                                   | (_, ArithC _) -> ArithC (op, x, y)
                                   | _ 			  -> raise (Desugar "not valid arithmatic expressions"))
-  | CompS (op, eS1, eS2)	  ->  CompC (op, desugar eS1, desugar eS2)
+  | CompS (op, eS1, eS2)	  -> CompC (op, desugar eS1, desugar eS2)
   | EqS (eS1, eS2)			    -> EqC (desugar eS1, desugar eS2)
   | NeqS (eS1, eS2)			    -> desugar (NotS (EqS (eS1, eS2)))
 
