@@ -34,13 +34,12 @@
 ;; return `(error "list too short")`.
 ;; The reference solution is 5 lines.
 (define (get-nth lst n)
-  (if (< n 0)
-      (error "negative index")
-          (if (equal? n 0)
-              (car lst)
-              (if (null? lst)
-                  (error "list too short")
-                  (get-nth (cdr lst) (- n 1))))))
+  (cond [(and (equal? n 0)
+              (not (null? lst)) (car lst))]
+        [(< n 0) (error "negative index")]
+        [(and (>= n 0) (null? lst)) (error "list too short")]
+        [#t (get-nth (cdr lst) (- n 1))]))
+        
 
 ;; Write a function `every-other`. It takes as input a list, and it returns a new list
 ;; where every other term is skipped. So applied to the list `'(1 2 3)` it should return
@@ -59,9 +58,12 @@
 ;; The reference solution is 5 lines.
 
 (define (map f lst)
-  (cond [(null? lst) null]
-        [(null? (cdr lst)) (cons (f (car lst)) null)]
-        [#t (cons (f (car lst)) (map f (cdr lst)))]))
+  (if (null? lst)
+      null
+      (if (null? (cdr lst))
+          (cons (f (car lst)) null)
+          (cons (f (car lst)) (map f (cdr lst))))))
+
 
 ;; Write a function `map2`. It takes three arguments: a function that takes two inputs
 ;; and two lists. It then creates a single new list by applying the function to pairs
@@ -79,9 +81,12 @@
 ;; The reference solution is 5 lines.
 
 (define (filter f lst)
-  (cond [(null? lst) null]
-        [(f (car lst)) (cons (car lst) (filter f (cdr lst)))]
-        [#t (filter f (cdr lst))]))
+  (if (null? lst)
+      null
+      (if (f (car lst))
+          (cons (car lst) (filter f (cdr lst)))
+          (filter f (cdr lst)))))
+
 
 ;; Write a function `call-all`. It takes as input a list of "thunks", and returns a
 ;; list of the results of calling those thunks. To call a function, you put it as the
@@ -89,5 +94,6 @@
 ;; The reference solution is 4 lines.
 
 (define (call-all th_lst)
-  (cond [(null? th_lst) null]
-        [#t (cons ((car th_lst)) (call-all (cdr th_lst)))]))
+  (if (null? th_lst)
+      null
+      (cons ( (car th_lst) ) (call-all (cdr th_lst)))))

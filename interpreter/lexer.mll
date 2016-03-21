@@ -24,19 +24,19 @@ rule token = parse
   | dblsemi     { DBLSEMI }
   | float as x  { FLOAT (float_of_string x) }
   | true   	  	{ TRUE }
-  | false    	{ FALSE }
-  | "if"	    { IF }
+  | false     	{ FALSE }
+  | "if"	      { IF }
   | "then"	  	{ THEN }
   | "else"	   	{ ELSE }
-  | "and"	    { AND }
-  | "or"	   	{ OR }
-  | "not"	    { NOT }
+  | "and"	      { AND }
+  | "or"	   	  { OR }
+  | "not"	      { NOT }
   | "+"         { PLUS }
   | "-"         { MINUS }
   | "*"         { TIMES }
   | "/"         { DIVIDE }
   | comp as s   { COMPOP s }
-  | "=="		{ EQ }
-  | "!="		{ NEQ }
+  | "=="		    { EQ }
+  | "!="		    { NEQ }
   | eof         { raise Eof }
   | any         { raise Unrecognized }

@@ -3,13 +3,13 @@ exception Interp of string       (* Use for interpreter errors *)
 
 (* You will need to add more cases here. *)
 type exprS = NumS of float | ArithS of string * exprS * exprS |
-			 CompS of string * exprS * exprS |
+			       CompS of string * exprS * exprS |
              BoolS of bool | IfS of exprS * exprS * exprS | 
              OrS of exprS * exprS | AndS of exprS * exprS | NotS of exprS |
              EqS of exprS * exprS | NeqS of exprS * exprS
 (* You will need to add more cases here. *)
 type exprC = NumC of float | ArithC of string * exprC * exprC |
-			 CompC of string * exprC * exprC | 
+		      	 CompC of string * exprC * exprC | 
              BoolC of bool | IfC of exprC * exprC * exprC |
              EqC of exprC * exprC 
 
@@ -51,7 +51,7 @@ let compEval s e1 e2 =
    					         | ">=" -> x >= y
    					         | "<"  -> x < y
    					         | "<=" -> x <= y
-   					     	 | _ -> raise (Interp "not an allowed symbol"))
+   					     	   | _ -> raise (Interp "not an allowed symbol"))
    | _ -> raise (Interp "one or both expressions are not nums")
 
 let eqEval e1 e2 = 
