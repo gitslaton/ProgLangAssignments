@@ -38,6 +38,22 @@
              
 (valid-program? (num 5))
 (not (valid-program? (num "f")))
+(not (valid-program? (var (bool #t))))
+(valid-program? (bool #f))
+(valid-program? (comp '< (num 4) (var 't)))
+(not (valid-program? (comp '! (bool #t) (bool #t))))
+(valid-program? (eq-e (bool #t) (num 2)))
+(not (valid-program? (eq-e (comp '! (bool #t) (bool #t)) (bool #f))))
+(valid-program? (fun 's 'k (num 5)))
+(not (valid-program? (fun 's 's (num 5))))
+(valid-program? (fun #f 's (bool #t)))
+(valid-program? (nul))
+(valid-program? (pair-e (num 5) (num 6)))
+(valid-program? (fst (num 5)))
+(valid-program? (snd (bool #t)))
+(not (valid-program? (fst (comp 'k (bool #f) (var 's)))))
+(valid-program? (isnul (num 5)))
+(valid-program? (if-e (isnul (num 5)) (nul) (num 0)))
 (valid-program? example1)
 
 ;; value?
@@ -51,6 +67,11 @@
 (value-eq? (num 5) (num 5))
 (not (value-eq? (num 5) (bool #t)))
 (not (value-eq? (num 5) (num 3.2)))
+(value-eq? (bool #t) (bool #t))
+(not (value-eq? (bool #f) (bool #t)))
+(value-eq? (pair-e (num 4) (bool #t)) (pair-e (num 4) (bool #t)))
+(not (value-eq? (pair-e (bool #t) (num 3)) (pair-e (bool #t) (num 1))))
+(not (value-eq? (pair-e (bool #f) (num 3)) (pair-e (bool #t) (num 3))))
 
 ;; interp / evaluate
 (displayln "interp/evaluate tests")

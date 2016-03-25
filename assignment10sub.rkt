@@ -80,14 +80,12 @@
 ;; passing the parser.
 ;;
 ;; The syntax rules are the following:
-;; - A `snd` is valid if `e` is valid
-;; - Nothing else is valid (including closures)
 ;;
 ;; The arith case is done for you as an example.
 ;; You will need to add many more cases to the cond.
 (define (valid-program? e)
   (cond [(var? e)            ;; - A `var` is valid if `s` is a Racket symbol. Use `symbol?`
-         (symbol? (var-s (e)))]
+         (symbol? (var-s e))]
         [(num? e)            ;; - A `num` is valid if `n` is a Racket number. Use `number?`
          (number? (num-n e))]
         [(bool? e)           ;; - A `bool` is valid if `b` is a Racket boolean`. Use `boolean?`
@@ -105,8 +103,8 @@
               (valid-program? (if-e-thn e))
               (valid-program? (if-e-els e)))]
         [(eq-e? e)           ;; - A `eq-e` is valid if both `e1` and `e2` are valid
-         (and (valid-program? (eq-e-e1))
-              (valid-program? (eq-e-e2)))]
+         (and (valid-program? (eq-e-e1 e))
+              (valid-program? (eq-e-e2 e)))]
         [(let-e? e)          ;; - A `let-e` is valid if the `s` is an Racket symbol, and the `e1` and `e2` are themselves valid
          (and (symbol? (let-e-s e))
               (valid-program? (let-e-e1 e))
@@ -114,15 +112,15 @@
         [(fun? e)           ;; - A `fun` is valid if `arg` is a Racket symbol, and `name` is either #f or a Racket symbol distinct from `arg`, and the `body` is valid. `name` is used for recursively calling the function, if it is not #f.
          (and (symbol? (fun-arg e))
               (or (equal? #f (fun-name e))
-                  (and (symbol? fun-name e)
+                  (and (symbol? (fun-name e))
                        (not (equal? (fun-arg e) (fun-name e)))))
               (valid-program? (fun-body e)))]
         [(call? e)          ;; - A `call` is valid if both `e1` and `e2` are valid
          (and (valid-program? (call-e1 e))
               (valid-program? (call-e2 e)))]
-        [(nul? e)]          ;; - A `nul` is valid
-        [(isnul? e)
-         (valid-program? e)];; - A `isnul` is valid if the `e` is valid
+        [(nul? e) #t]          ;; - A `nul` is valid
+        [(isnul? e)           ;; - A `isnul` is valid if the `e` is valid
+         (valid-program? (isnul-e e))]
         [(pair-e? e)        ;; - A `pair-e` is valid if both `e1` and `e2` are valid
          (and (valid-program? (pair-e-e1 e))
               (valid-program? (pair-e-e2 e)))]
@@ -130,7 +128,7 @@
          (valid-program? (fst-e e))]
         [(snd? e)
          (valid-program? (snd-e e))]
-        [else #f]))
+        [else #f]))         ;; - Nothing else is valid (including closures)
  
 
 
@@ -155,7 +153,8 @@
       (nul? e)
       (clos? e)
       (and (pair-e? e)
-          (and (value? (pair-e-e1 e)) (value? (pair-e-e2 e))))))
+           (and (value? (pair-e-e1 e))
+                (value? (pair-e-e2 e))))))
 
 
 ;; TODO: Write a function `value-eq?` to test if two values are "equal".
@@ -169,7 +168,13 @@
 (define (value-eq? v1 v2)
   (cond [(and (num? v1) (num? v2))
          (equal? (num-n v1) (num-n v2))]
-        [else #f]))          ;; <---- Need to add more cases
+        [(and (bool? v1) (bool? v2))
+         (equal? (bool-b v1) (bool-b v2))]
+        [(and (nul? v1) (nul? v2)) #t]
+        [(and (pair-e? v1) (pair-e? v2))
+         (and (value-eq? (pair-e-e1 v1) (pair-e-e1 v2))
+              (value-eq? (pair-e-e2 v1) (pair-e-e2 v2)))]
+        [else #f]))         
               
 
 ;;       INTERPRETATION
