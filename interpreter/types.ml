@@ -3,13 +3,13 @@ exception Interp of string       (* Use for interpreter errors *)
 
 (* You will need to add more cases here. *)
 type exprS = NumS of float | ArithS of string * exprS * exprS |
-			       CompS of string * exprS * exprS |
+	     CompS of string * exprS * exprS |
              BoolS of bool | IfS of exprS * exprS * exprS | 
              OrS of exprS * exprS | AndS of exprS * exprS | NotS of exprS |
              EqS of exprS * exprS | NeqS of exprS * exprS
 (* You will need to add more cases here. *)
 type exprC = NumC of float | ArithC of string * exprC * exprC |
-		      	 CompC of string * exprC * exprC | 
+	     CompC of string * exprC * exprC | 
              BoolC of bool | IfC of exprC * exprC * exprC |
              EqC of exprC * exprC 
 
@@ -25,6 +25,7 @@ let rec lookup str env =
   match env with
   | []          -> None
   | (s,v) :: tl -> if s = str then Some v else lookup str tl
+  
 (* val bind :  string -> 'a -> 'a env -> 'a env *)
 let bind str v env = (str, v) :: env
 
@@ -41,17 +42,17 @@ let arithEval s e1 e2 =
                            | "-" -> x -. y
                            | "*" -> x *. y
                            | "/" -> if y = 0.0 then raise (Interp "cannot divide by zero") else x /. y
-                           | _ -> raise (Interp "not an allowed symbol"))
+                           | _   -> raise (Interp "not an allowed symbol"))
   | _ -> raise (Interp "not a num") 
 
 let compEval s e1 e2 = 
    match (e1, e2) with
    | (Num x, Num y) -> Bool (match s with
-   					         | ">"  -> x > y
-   					         | ">=" -> x >= y
-   					         | "<"  -> x < y
-   					         | "<=" -> x <= y
-   					     	   | _ -> raise (Interp "not an allowed symbol"))
+   		             | ">"  -> x > y
+   			     | ">=" -> x >= y
+   			     | "<"  -> x < y
+   			     | "<=" -> x <= y
+   			     | _ -> raise (Interp "not an allowed symbol"))
    | _ -> raise (Interp "one or both expressions are not nums")
 
 let eqEval e1 e2 = 
@@ -66,7 +67,7 @@ let eqEval e1 e2 =
 let rec desugar exprS = 
   match exprS with
   | NumS i                    -> NumC i
-  | BoolS b 	                -> BoolC b
+  | BoolS b 	              -> BoolC b
   | IfS (ifS, thenS, elseS)   -> IfC (desugar ifS, desugar thenS, desugar elseS)
   | NotS (bS)                 -> desugar (IfS (bS, BoolS false, BoolS true))
   | OrS (ifS, ifS')           -> desugar (IfS (ifS, BoolS true, (IfS (ifS', BoolS true, BoolS false))))
@@ -77,10 +78,10 @@ let rec desugar exprS =
                                   | (_, NumC _)
                                   | (ArithC _, _)
                                   | (_, ArithC _) -> ArithC (op, x, y)
-                                  | _ 			  -> raise (Desugar "not valid arithmatic expressions"))
-  | CompS (op, eS1, eS2)	  -> CompC (op, desugar eS1, desugar eS2)
-  | EqS (eS1, eS2)			    -> EqC (desugar eS1, desugar eS2)
-  | NeqS (eS1, eS2)			    -> desugar (NotS (EqS (eS1, eS2)))
+                                  | _             -> raise (Desugar "not valid arithmatic expressions"))
+  | CompS (op, eS1, eS2)       -> CompC (op, desugar eS1, desugar eS2)
+  | EqS (eS1, eS2)	       -> EqC (desugar eS1, desugar eS2)
+  | NeqS (eS1, eS2)	       -> desugar (NotS (EqS (eS1, eS2)))
 
 
 (* You will need to add cases here. *)
@@ -88,7 +89,7 @@ let rec desugar exprS =
 let rec interp env r =
   match r with
   | NumC i                  -> Num i
-  | BoolC b 	              -> Bool b
+  | BoolC b 	            -> Bool b
   | IfC (ifC, thenC, elseC) -> let e = interp env ifC in
                                (match e with
                                 | Bool b -> if b then interp env thenC else interp env elseC
