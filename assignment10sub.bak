@@ -34,7 +34,7 @@
 ;; This should be a simple consing of a binding.
 ;;
 (define (bind s v env)
-  (list* (cons s v) env)       ;   <----- Need to implement this
+  (cons (binding s v) env))       ;   <----- Need to implement this
 
 ;;
 ;; TODO: Implement the function lookup, that looks for the symbol s in
@@ -43,8 +43,13 @@
 ;; It should throw an appropriate "lookup failed" error if it can't find
 ;; the symbol.
 (define (lookup s env)
-  (error (string-append "lookup: symbol not defined: "
-                        (symbol->string s))))
+  (if (null? env)
+      (error (string-append "lookup: symbol not defined: "
+                        (symbol->string s)))
+    (if (equal? s (binding-s (car env)))
+      (binding-v (car env))
+      (lookup s (cdr env)))))
+   
 
 ;;            THE LANGUAGE
 ;; We define the language in terms of structs.
@@ -75,38 +80,56 @@
 ;; passing the parser.
 ;;
 ;; The syntax rules are the following:
-;; 
-;; - A `var` is valid if `s` is a Racket symbol. Use `symbol?`
-;; - A `num` is valid if `n` is a Racket number. Use `number?`
-;; - A `bool` is valid if `b` is a Racket boolean`. Use `boolean?`
-;; - A `arith` is valid if `op` is from the list '+, '-, '*, '/ and
-;;     the `e1` and `e2` components are themselves valid
-;; - A `comp` is valid if `op` is from the list '<, '<=, '>=, '> and
-;;     the `e1` and `e2` components are themselves valid
-;; - A `if-e` is valid if `tst`, `thn` and `els` are all valid
-;; - A `eq-e` is valid if both `e1` and `e2` are valid
-;; - A `let-e` is valid if the `s` is an Racket symbol, and the 
-;;     `e1` and `e2` are themselves valid
-;; - A `fun` is valid if `arg` is a Racket symbol, and `name` is
-;;      either #f or a Racket symbol distinct from `arg`, and the
-;;      `body` is valid. `name` is used for recursively calling the
-;;      function, if it is not #f.
-;; - A `call` is valid if both `e1` and `e2` are valid
-;; - A `nul` is valid
-;; - A `isnul` is valid if the `e` is valid
-;; - A `pair-e` is valid if both `e1` and `e2` are valid
-;; - A `fst` is valid if `e` is valid
-;; - A `snd` is valid if `e` is valid
-;; - Nothing else is valid (including closures)
 ;;
 ;; The arith case is done for you as an example.
 ;; You will need to add many more cases to the cond.
 (define (valid-program? e)
-  (cond [(arith? e)
+  (cond [(var? e)            ;; - A `var` is valid if `s` is a Racket symbol. Use `symbol?`
+         (symbol? (var-s e))]
+        [(num? e)            ;; - A `num` is valid if `n` is a Racket number. Use `number?`
+         (number? (num-n e))]
+        [(bool? e)           ;; - A `bool` is valid if `b` is a Racket boolean`. Use `boolean?`
+         (boolean? (bool-b e))]
+        [(arith? e)          ;; - A `arith` is valid if `op` is from the list '+, '-, '*, '/ and the `e1` and `e2` components are themselves valid
          (and (memq (arith-op e) (list '+ '* '- '/))
               (valid-program? (arith-e1 e))
               (valid-program? (arith-e2 e)))]
-        [else #f]))
+        [(comp? e)           ;; - A `comp` is valid if `op` is from the list '<, '<=, '>=, '> and the `e1` and `e2` components are themselves valid
+         (and (memq (comp-op e) (list '< '<= '>= '>))
+              (valid-program? (comp-e1 e))
+              (valid-program? (comp-e2 e)))]
+        [(if-e? e)           ;; - A `if-e` is valid if `tst`, `thn` and `els` are all valid
+         (and (valid-program? (if-e-tst e))
+              (valid-program? (if-e-thn e))
+              (valid-program? (if-e-els e)))]
+        [(eq-e? e)           ;; - A `eq-e` is valid if both `e1` and `e2` are valid
+         (and (valid-program? (eq-e-e1 e))
+              (valid-program? (eq-e-e2 e)))]
+        [(let-e? e)          ;; - A `let-e` is valid if the `s` is an Racket symbol, and the `e1` and `e2` are themselves valid
+         (and (symbol? (let-e-s e))
+              (valid-program? (let-e-e1 e))
+              (valid-program? (let-e-e2 e)))]
+        [(fun? e)           ;; - A `fun` is valid if `arg` is a Racket symbol, and `name` is either #f or a Racket symbol distinct from `arg`, and the `body` is valid. `name` is used for recursively calling the function, if it is not #f.
+         (and (symbol? (fun-arg e))
+              (or (equal? #f (fun-name e))
+                  (and (symbol? (fun-name e))
+                       (not (equal? (fun-arg e) (fun-name e)))))
+              (valid-program? (fun-body e)))]
+        [(call? e)          ;; - A `call` is valid if both `e1` and `e2` are valid
+         (and (valid-program? (call-e1 e))
+              (valid-program? (call-e2 e)))]
+        [(nul? e) #t]          ;; - A `nul` is valid
+        [(isnul? e)           ;; - A `isnul` is valid if the `e` is valid
+         (valid-program? (isnul-e e))]
+        [(pair-e? e)        ;; - A `pair-e` is valid if both `e1` and `e2` are valid
+         (and (valid-program? (pair-e-e1 e))
+              (valid-program? (pair-e-e2 e)))]
+        [(fst? e)           ;; - A `fst` is valid if `e` is valid
+         (valid-program? (fst-e e))]
+        [(snd? e)
+         (valid-program? (snd-e e))]
+        [else #f]))         ;; - Nothing else is valid (including closures)
+ 
 
 
 ;;     VALUES
@@ -126,7 +149,13 @@
 ;; add the rest.
 (define (value? e)
   (or (num? e)
-      #f))      ;; <---- Need to change this
+      (bool? e)
+      (nul? e)
+      (clos? e)
+      (and (pair-e? e)
+           (and (value? (pair-e-e1 e))
+                (value? (pair-e-e2 e))))))
+
 
 ;; TODO: Write a function `value-eq?` to test if two values are "equal".
 ;; Two values `v1`, `v2` are considered equal in the following cases:
@@ -139,7 +168,13 @@
 (define (value-eq? v1 v2)
   (cond [(and (num? v1) (num? v2))
          (equal? (num-n v1) (num-n v2))]
-        [else #f]))          ;; <---- Need to add more cases
+        [(and (bool? v1) (bool? v2))
+         (equal? (bool-b v1) (bool-b v2))]
+        [(and (nul? v1) (nul? v2)) #t]
+        [(and (pair-e? v1) (pair-e? v2))
+         (and (value-eq? (pair-e-e1 v1) (pair-e-e1 v2))
+              (value-eq? (pair-e-e2 v1) (pair-e-e2 v2)))]
+        [else #f]))         
               
 
 ;;       INTERPRETATION
@@ -204,6 +239,8 @@
            (if (and (num? v1) (num? v2))
                (num (op (num-n v1) (num-n v2)))
                (error "interp: arithmetic on non-numbers")))]
+        [(bool? e) e]
+        
         [else (error "interp: unknown expression")]))
  
 ;;         EVALUATE

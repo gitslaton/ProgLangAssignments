@@ -126,7 +126,7 @@
               (valid-program? (pair-e-e2 e)))]
         [(fst? e)           ;; - A `fst` is valid if `e` is valid
          (valid-program? (fst-e e))]
-        [(snd? e)
+        [(snd? e)          ;; - A `snd` is valid if `e` is valid
          (valid-program? (snd-e e))]
         [else #f]))         ;; - Nothing else is valid (including closures)
  
@@ -230,7 +230,8 @@
 ;; description.
 ;; Some cases done for you.
 (define (interp env e)
-  (cond [(num? e) e]
+  (cond [(nul? e) nul]
+        [(num? e) e]
         [(arith? e)
          (let ([v1 (interp env (arith-e1 e))]
                [v2 (interp env (arith-e2 e))]
@@ -239,8 +240,28 @@
            (if (and (num? v1) (num? v2))
                (num (op (num-n v1) (num-n v2)))
                (error "interp: arithmetic on non-numbers")))]
+        [(bool? e) e]
+        [(var? e) (lookup (var-s e) env)]
+        [(comp? e)
+         (let ([v1 (interp env (comp-e1 e))]
+               [v2 (interp env (comp-e2 e))]
+               [op (case (comp-op e)
+                     ['> >] ['>= >=] ['< <] ['<= <=])])
+         (if (and (num? v1) (num? v2))   
+             (bool (op (num-n v1) (num-n v2)))
+             (error "interp: comparison on non-numbers")))]
+        [(if-e? e)
+         (if (bool? (if-e-tst e))
+             (let ([if_test (bool-b (if-e-tst e))])
+               (if if_test
+                   (interp env (if-e-thn e))
+                   (interp env (if-e-els e))))
+             (error "interp: not a boolean test in if"))]
+        [(let-e? e)
+         (let ([v1 (interp env (let-e-e1 e))])
+           (interp (bind (let-e-s e) v1 env) (let-e-e2 e)))]
         [else (error "interp: unknown expression")]))
- 
+
 ;;         EVALUATE
 ;; This method simply calls the interpreter with an initially empty environment
 ;; Do not change it
