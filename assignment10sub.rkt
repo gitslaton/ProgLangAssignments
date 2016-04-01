@@ -264,11 +264,13 @@
            (interp (bind (let-e-s e) v1 env) (let-e-e2 e)))]
         [(fun? e)
          (clos (e env))]
-        ;;[(call? e)
-         ;;(let (c (interp env (call-e1 e)))
-          ;; (if (clos? c)
-            ;;   (interp (clos-env c) (call-e2 e))
-              ;; (error "interp: call on non-closure")))]
+        [(call? e)
+         (let ([c (interp env (call-e1 e))])
+          (if (clos? c)
+            (if (equal? (fun-name (clos-f c)) #f)
+               (interp (clos-env c) (call-e2 e))
+               (interp (bind (fun-name (clos-f c)) (interp env (clos-f c)) (clos-env c)) (call-e2 e)))
+            (error "interp: call on non-closure")))]
         [(isnul? e)
          (bool (nul? (interp env isnul-e e)))]
         [(pair-e? e)
@@ -321,13 +323,13 @@
 ;; expressions `e1` and `e2` and returns the appropriate `if-e` expression
 ;; that performs the "or" of the two expressions.
 (define (or2 e1 e2)
-  (if-e e1 (bool #t) (if-e e2 (bool #t) (bool #f))))   ;  <----- Need to fix this
+  (if-e e1 (bool #t) (if-e e2 (bool #t) (bool #f))))   
 
 ;; TODO: Write a function `and2` that takes as input two source language
 ;; expressions `e1` and `e2` and returns the appropriate `if-e` expression
 ;; that performs the "and" of the two expressions.
 (define (and2 e1 e2)
-  #f)   ;  <----- Need to fix this
+  (if-e e1 (if-e e2 (bool #t) (bool #f)) (bool #f))) 
 
 ;; TODO: Write a function `or-e` that takes as input any number of source
 ;; language expressions as input and creates the corresponding nested
