@@ -150,8 +150,11 @@
   (equal? (evaluate (or2 (comp '> (num 2) (num 3))
                          (bool #t)))
           (bool #t)))
+(equal? (evaluate (or2 (bool #f) (bool #f)))
+        (bool #f))
 
-
+(equal? (evaluate (or2 (neq (arith '+ (num 2) (num 3)) (num 6)) (bool #f)))
+        (bool #t))
 ;; and2
 (displayln "and2 tests")
 (with-handlers ([exn:fail? (lambda (exn) #f)])
