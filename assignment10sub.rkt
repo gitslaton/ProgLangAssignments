@@ -230,9 +230,9 @@
 ;; description.
 ;; Some cases done for you.
 (define (interp env e)
-  (cond [(nul? e) nul]
-        [(num? e) e]
-        [(arith? e)
+  (cond [(nul? e) nul] ;; eval to self
+        [(num? e) e]   ;; eval to self
+        [(arith? e)    ;; perform op on e1 and e2. Make sure e1 and e2 eval to nums.
          (let ([v1 (interp env (arith-e1 e))]
                [v2 (interp env (arith-e2 e))]
                [op (case (arith-op e)
@@ -240,9 +240,9 @@
            (if (and (num? v1) (num? v2))
                (num (op (num-n v1) (num-n v2)))
                (error "interp: arithmetic on non-numbers")))]
-        [(bool? e) e]
-        [(var? e) (lookup (var-s e) env)]
-        [(comp? e)
+        [(bool? e) e] ;; eval to self
+        [(var? e) (lookup (var-s e) env)] ;; get the val of the var from the environment
+        [(comp? e)    ;; perform correct op on e1 and e2. Make sure both are nums.
          (let ([v1 (interp env (comp-e1 e))]
                [v2 (interp env (comp-e2 e))]
                [op (case (comp-op e)
@@ -250,16 +250,39 @@
          (if (and (num? v1) (num? v2))   
              (bool (op (num-n v1) (num-n v2)))
              (error "interp: comparison on non-numbers")))]
-        [(if-e? e)
-         (if (bool? (if-e-tst e))
-             (let ([if_test (bool-b (if-e-tst e))])
+        [(if-e? e)   ;; Make sure tst evals to a bool. Perform correct action based on bool. Throw error if tst not bool.
+         (if (bool? (interp env (if-e-tst e)))
+             (let ([if_test (bool-b (interp env (if-e-tst e)))])
                (if if_test
                    (interp env (if-e-thn e))
                    (interp env (if-e-els e))))
              (error "interp: not a boolean test in if"))]
+        [(eq-e? e)
+         (bool (value-eq? (interp env (eq-e-e1 e)) (interp env (eq-e-e2 e))))]
         [(let-e? e)
          (let ([v1 (interp env (let-e-e1 e))])
            (interp (bind (let-e-s e) v1 env) (let-e-e2 e)))]
+        [(fun? e)
+         (clos (e env))]
+        ;;[(call? e)
+         ;;(let (c (interp env (call-e1 e)))
+          ;; (if (clos? c)
+            ;;   (interp (clos-env c) (call-e2 e))
+              ;; (error "interp: call on non-closure")))]
+        [(isnul? e)
+         (bool (nul? (interp env isnul-e e)))]
+        [(pair-e? e)
+         (pair-e (interp env (pair-e-e1 e)) (interp env (pair-e-e2 e)))]
+        [(fst? e)
+         (let ([p (interp env (fst-e))])
+           (if (pair-e? p)
+               (interp env (pair-e-e1 p))
+               (error "interp: cannot get first from non-pair")))]
+        [(snd? e)
+         (let ([p (interp env (snd-e))])
+           (if (pair-e? p)
+               (interp env (pair-e-e2 p))
+               (error "interp: cannot get second from non-pair")))]
         [else (error "interp: unknown expression")]))
 
 ;;         EVALUATE
@@ -292,13 +315,13 @@
 ;; expressions and returns the expression that tests that they are not
 ;; equal. This should be a combination of `not-e` and `eq-e`.
 (define (neq e1 e2)
-  #f)      ; <---- Need to fix this
+  (not-e (eq-e e1 e2)))
 
 ;; TODO: Write a function `or2` that takes as input two source language
 ;; expressions `e1` and `e2` and returns the appropriate `if-e` expression
 ;; that performs the "or" of the two expressions.
 (define (or2 e1 e2)
-  #f)   ;  <----- Need to fix this
+  (if-e e1 (bool #t) (if-e e2 (bool #t) (bool #f))))   ;  <----- Need to fix this
 
 ;; TODO: Write a function `and2` that takes as input two source language
 ;; expressions `e1` and `e2` and returns the appropriate `if-e` expression

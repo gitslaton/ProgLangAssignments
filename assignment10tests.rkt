@@ -89,6 +89,8 @@
   (equal? (evaluate (if-e (num 3) (num 3) (num 2)))
           (num 4)))
 
+;;(equal? (evaluate (if-e (eq-e? (num 3) (num 4)) (num 10) (num 20)))
+  ;;      (num 20))
 ;; We are using a try-catch form here because comp isn't
 ;; implemented yet. Your tests probably don't need to do that.
 ;; Similarly for subsequent uses of with-handlers.
@@ -126,12 +128,21 @@
 (equal? (evaluate (comp '<= (num 1) (num 10)))
         (bool #t))
 
+(equal? (evaluate (eq-e (num 1) (bool #f)))
+        (bool #f))
+(equal? (evaluate (eq-e (num 0) (if-e (bool #f) (num 1) (num 0))))
+        (bool #t))
+
+
 ;; neq
 (displayln "neq tests")
 (with-handlers ([exn:fail? (lambda (exn) #f)])
   (equal? (evaluate (neq (arith '+ (num 2) (num 3))
                          (num 6)))
           (bool #t)))
+
+(equal? (evaluate (neq (num 3) (num 3)))
+        (bool #f))
 
 ;; or2
 (displayln "or2 tests")
