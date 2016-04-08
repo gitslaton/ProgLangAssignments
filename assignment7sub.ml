@@ -207,13 +207,7 @@ let invert pc =
 (*- Write a function `transpose` that takes as input a picture and returns the result of "transposing" the picture, i.e. turning its rows into columns. This one is short but tricky. The reference solution is 4 lines and uses `List.fold_right`, `List.map` and `List.map2` along with a let binding and a conditional. Start by working out manually in a small example how a recursive implementation might function (but your final solution is not meant to be recursive; this would just help you figure out the kind of work that your `fold_right` would have to do). Should have type: `pic -> pic`*)
 
 let transpose pc = pc
-  (*
-    let (x, y) = dims_pic pc
-    in let aux lst i = 
-      match lst with
-      | [] -> []
-      | hd::tl -> if i = y 
-                  then hd::(aux tl (y - 1))
-                  else aux tl (y - 1)
-    in let px_lst = List.fold_right (fun x acc -> x@acc) pc []
-    *)
+   match pc with
+   | [] -> []
+   | row :: rest -> List.fold_right (fun x acc -> List.map2 (fun r1 r2 -> r1 @ r2) (List.map (fun y -> y :: []) x) acc) 
+                     pc (List.map (fun z -> []) row)
