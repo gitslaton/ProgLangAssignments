@@ -276,12 +276,12 @@
         [(pair-e? e)
          (pair-e (interp env (pair-e-e1 e)) (interp env (pair-e-e2 e)))]
         [(fst? e)
-         (let ([p (interp env (fst-e))])
+         (let ([p (interp env (fst-e e))])
            (if (pair-e? p)
                (interp env (pair-e-e1 p))
                (error "interp: cannot get first from non-pair")))]
         [(snd? e)
-         (let ([p (interp env (snd-e))])
+         (let ([p (interp env (snd-e e))])
            (if (pair-e? p)
                (interp env (pair-e-e2 p))
                (error "interp: cannot get second from non-pair")))]
@@ -344,7 +344,7 @@
 ;; learn about the syntax for `foldr`.
 (define or-e
   (lambda es
-    (bool #f)))      ; <------ Need to fix this
+    (foldr or2 '() es)))      ; <------ Need to fix this
 
 ;; TODO: We will similarly do something for `and-e`, but for this one
 ;; we will instead build a macro. For no arguments, this should return
@@ -354,7 +354,7 @@
   (syntax-rules ()
     [(and-e) (bool #t)]
     [(and-e e1) e1]
-    [(and-e e1 e2 ...) #f]))   ; <-- Need to fix this. Use and2 and "recursion"
+    [(and-e e1 e2 ...) (and2 e1 (and-e e2 ... ))]))   ; <--  Use and2 and "recursion"
 
 ;; TODO: Build a `let-e*` macro that takes input like:
 ;; `(let-e* ([s1 e1] [s2 e2] ...) e)` and creates the equivalent nested 
@@ -364,7 +364,7 @@
   (syntax-rules ()
     [(let-e* () e) e]
     [(let-e* ([s1 e1]) e) (let-e s1 e1 e)]
-    [(let-e* ([s1 e1] rest ...) e) #f]))  ; <-- Need to fix this.
+    [(let-e* ([s1 e1] rest ...) e) (let-e s1 e1 (let-e* (rest ...) e))]))  ; <-- Need to fix this.
 
 ;; TODO: Write functions or macros `plus`, and `mult` that take any number
 ;; of source language expressions as arguments and creates a corresponding
@@ -373,8 +373,17 @@
 ;; for 0 or 1 respectively.
 ;; You can choose either a macro approach like in `and-e` or a function
 ;; approach and `foldr` like in `or-e`.
+(define-syntax plus
+  (syntax-rules ()
+    [(plus) (num 0)]
+    [(plus e1 e2) (plus2 e1 e2)]
+    [(plus e1 e2 ...) (plus2 e1 (plus e2 ... ))])) 
 
-
+(define-syntax mult
+  (syntax-rules ()
+    [(mult) (num 1)]
+    [(mult e1 e2) (mult2 e1 e2)]
+    [(mult e1 e2 ...) (mult2 e1 (mult e2 ... ))])) 
 
 
 ;; TODO: Write a macro `minus` that takes one or more arguments and behaves
@@ -385,7 +394,11 @@
 ;; Try out the function `-` in Racket to see examples of the behavior.
 ;; Do this as a macro, similar to `and-e`.
 
-
+(define-syntax minus
+  (syntax-rules ()
+    [(minus) (num 0)]
+    [(minus e1) (minus2 (num 0) e1)]
+    [(minus e1 e2 ...) (minus2 e1 (minus e2 ... ))])) 
 
 
 ;;            LISTS

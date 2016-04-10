@@ -92,7 +92,7 @@ let doodad = [
 [H;H;D;D;D;D;D;D;D;D;D;D;D;D;D;D;D;D;D;D;D;D;D;D;D;D;H;H];
 [H;H;H;H;D;D;D;D;D;D;D;D;D;D;D;D;D;D;D;D;D;D;D;D;H;H;H;H];
 [H;H;H;D;H;D;D;D;D;D;D;D;D;D;D;D;D;D;D;D;D;D;D;H;D;H;H;H];
-[H;H;H;D;D;H;H;D;D;D;D;D;D;D;D;D;D;D;D;D;D;H;H;D;D;H;H;H];
+[H;H;H;D;D;H;H;D;D;D;D;D;D;D;D;D;D;D;D;D;D;H;H;D;D;H;H;H];  
 [D;H;H;D;D;D;D;H;D;D;D;D;D;D;D;D;D;D;D;D;H;D;D;D;D;H;H;D];
 [D;H;H;D;D;D;D;D;H;H;D;D;H;H;H;H;D;D;H;H;D;D;D;D;D;H;H;D];
 [D;D;H;D;D;D;D;D;D;D;H;H;D;D;D;D;H;H;D;D;D;D;D;D;D;H;D;D];

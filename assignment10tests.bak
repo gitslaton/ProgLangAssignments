@@ -81,14 +81,57 @@
         (num 6))
 
 (equal? (evaluate (if-e (bool #t) (num 3) (num 4)))
-        (num 4))
+        (num 3))
 
+(equal? (evaluate (if-e (bool #f) (num 3) (num 4)))
+        (num 4))
+(with-handlers ([exn:fail? (lambda (exn) #t)])
+  (equal? (evaluate (if-e (num 3) (num 3) (num 2)))
+          (num 4)))
+
+;;(equal? (evaluate (if-e (eq-e? (num 3) (num 4)) (num 10) (num 20)))
+  ;;      (num 20))
 ;; We are using a try-catch form here because comp isn't
 ;; implemented yet. Your tests probably don't need to do that.
 ;; Similarly for subsequent uses of with-handlers.
 (with-handlers ([exn:fail? (lambda (exn) #f)])
   (equal? (evaluate (comp '< (num 3) (num 2)))
           (bool #f)))
+
+(with-handlers ([exn:fail? (lambda (exn) #t)])
+  (equal? (evaluate (comp '/ (num 3) (num 2)))
+          (bool #f)))
+(with-handlers ([exn:fail? (lambda (exn) #t)])
+  (equal? (evaluate (comp '< (num 3) (bool #f)))
+          (bool #f)))
+
+(with-handlers ([exn:fail? (lambda (exn) #t)])
+  (equal? (evaluate (comp '< (bool #t) (num 2)))
+          (bool #f)))
+
+(equal? (evaluate (comp '> (num 10) (num 9)))
+        (bool #t))
+(equal? (evaluate (comp '> (num 9) (num 10)))
+        (bool #f))
+(equal? (evaluate (comp '>= (num 0) (num 0)))
+        (bool #t))
+(equal? (evaluate (comp '>= (num 0) (num 1)))
+        (bool #f))
+(equal? (evaluate (comp '>= (num 22) (num 1)))
+        (bool #t))
+(equal? (evaluate (comp '< (num 9) (num 10)))
+        (bool #t))
+(equal? (evaluate (comp '< (num 99) (num 10)))
+        (bool #f))
+(equal? (evaluate (comp '<= (num 10) (num 10)))
+        (bool #t))
+(equal? (evaluate (comp '<= (num 1) (num 10)))
+        (bool #t))
+
+(equal? (evaluate (eq-e (num 1) (bool #f)))
+        (bool #f))
+(equal? (evaluate (eq-e (num 0) (if-e (bool #f) (num 1) (num 0))))
+        (bool #t))
 
 
 ;; neq
@@ -98,14 +141,20 @@
                          (num 6)))
           (bool #t)))
 
+(equal? (evaluate (neq (num 3) (num 3)))
+        (bool #f))
+
 ;; or2
 (displayln "or2 tests")
 (with-handlers ([exn:fail? (lambda (exn) #f)])
   (equal? (evaluate (or2 (comp '> (num 2) (num 3))
                          (bool #t)))
           (bool #t)))
+(equal? (evaluate (or2 (bool #f) (bool #f)))
+        (bool #f))
 
-
+(equal? (evaluate (or2 (neq (arith '+ (num 2) (num 3)) (num 6)) (bool #f)))
+        (bool #t))
 ;; and2
 (displayln "and2 tests")
 (with-handlers ([exn:fail? (lambda (exn) #f)])
@@ -146,10 +195,10 @@
 (displayln "plus/times tests")
 ;; Test commented out until you implement plus
 
-;(equal? (evaluate (plus (num 2) (num 5) (num 3)))
-;        (num 10))
-;(equal? (evaluate (mult (num 2) (num 5) (num 3)))
-;        (num 30))
+(equal? (evaluate (plus (num 2) (num 5) (num 3)))
+        (num 10))
+(equal? (evaluate (mult (num 2) (num 5) (num 3)))
+        (num 30))
 
 
 ;; minus
