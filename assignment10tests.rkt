@@ -82,15 +82,14 @@
 
 (equal? (evaluate (if-e (bool #t) (num 3) (num 4)))
         (num 3))
-
 (equal? (evaluate (if-e (bool #f) (num 3) (num 4)))
         (num 4))
 (with-handlers ([exn:fail? (lambda (exn) #t)])
   (equal? (evaluate (if-e (num 3) (num 3) (num 2)))
           (num 4)))
 
-;;(equal? (evaluate (if-e (eq-e? (num 3) (num 4)) (num 10) (num 20)))
-  ;;      (num 20))
+(equal? (evaluate (if-e (eq-e (num 3) (num 4)) (num 10) (num 20)))
+      (num 20))
 ;; We are using a try-catch form here because comp isn't
 ;; implemented yet. Your tests probably don't need to do that.
 ;; Similarly for subsequent uses of with-handlers.
