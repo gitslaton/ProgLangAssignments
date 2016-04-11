@@ -344,7 +344,7 @@
 ;; learn about the syntax for `foldr`.
 (define or-e
   (lambda es
-    (foldr or2 '() es)))      ; <------ Need to fix this
+    (foldr or2 '() es)))      
 
 ;; TODO: We will similarly do something for `and-e`, but for this one
 ;; we will instead build a macro. For no arguments, this should return
@@ -416,7 +416,7 @@
 ;; Do this as a function that uses `foldr`.
 (define racketlist->sourcelist
   (lambda (exps)
-    #f))        ;  <--- Replace this with an appropriate foldr call.
+    (foldr pair-e (nul) exps)))        ;  <--- Replace this with an appropriate foldr call.
 
 ;; TODO: Write a source language expression `map-e`. It should be a 
 ;; `fun` that takes as input a "fun" `f` and returns a `fun` that takes
@@ -426,4 +426,6 @@
 (define map-e
   (fun 'map 'f 
        (fun 'inner 'lst
-            (nul))))   ; <--- Need to change this
+            (if-e (isnul 'lst)
+                (nul)
+                (pair-e (call 'f (fst 'lst)) (call 'inner (snd 'lst))))))); <--- Need to change this
