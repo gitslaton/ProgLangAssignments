@@ -11,6 +11,8 @@
 (equal? (add-nums (list)) 0) ;;empty list
 (equal? (add-nums (list 1 2 'a 3)) 6) ;; non-number
 
+(equal? (add-nums (list 'c)) 0)
+(equal? (add-nums (list 5)) 5)
 ;; length
 (display "length\n")
 (equal? (length (list)) 0) ;; empty list
@@ -30,6 +32,7 @@
 
   (equal? (get-nth (list 2 3) 1) 3)
 
+
 ;; every-other
 (display "every-other\n")
 (equal? (every-other (list 1 2 3 4)) (list 1 3)) ;; even length
@@ -41,6 +44,7 @@
 (equal? (map (lambda (x) (* x x)) (list 1 2 3))
      (list 1 4 9))       ;; squaring
 (null? (map (lambda (x) (* x x)) null))
+(equal? (map (lambda (x) (+ 1 x)) (list 1)) (list 2))
 
 ;; map2
 (display "map2\n")
