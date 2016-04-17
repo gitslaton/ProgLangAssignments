@@ -230,7 +230,7 @@
 ;; description.
 ;; Some cases done for you.
 (define (interp env e)
-  (cond [(nul? e) nul] ;; eval to self
+  (cond [(nul? e) e] ;; eval to self
         [(num? e) e]   ;; eval to self
         [(arith? e)    ;; perform op on e1 and e2. Make sure e1 and e2 eval to nums.
          (let ([v1 (interp env (arith-e1 e))]
@@ -272,7 +272,7 @@
                (interp (bind (fun-name (clos-f c)) (interp env (clos-f c)) (clos-env c)) (call-e2 e)))
             (error "interp: call on non-closure")))]
         [(isnul? e)
-         (bool (nul? (interp env isnul-e e)))]
+         (bool (nul? (interp env (isnul-e e))))]
         [(pair-e? e)
          (pair-e (interp env (pair-e-e1 e)) (interp env (pair-e-e2 e)))]
         [(fst? e)

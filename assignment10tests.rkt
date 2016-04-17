@@ -77,8 +77,15 @@
 (displayln "interp/evaluate tests")
 (equal? (evaluate (num 3))
         (num 3))
+(equal? (evaluate (nul)) (nul))
+(equal? (evaluate (bool true)) (bool true))
+(equal? (evaluate (bool false)) (bool false))
 (equal? (evaluate (arith '* (num 3) (num 2)))
         (num 6))
+(equal? (evaluate (arith '- (num 0) (num 1))) (num -1))
+(equal? (evaluate (arith '+ (num -1) (num 2))) (num 1))
+
+(equal? (evaluate (arith '/ (num 10) (num 5))) (num 2))
 
 (equal? (evaluate (if-e (bool #t) (num 3) (num 4)))
         (num 3))
@@ -132,7 +139,17 @@
 (equal? (evaluate (eq-e (num 0) (if-e (bool #f) (num 1) (num 0))))
         (bool #t))
 
+;;not sure how to test functions and call
 
+(equal? (evaluate (isnul (num 3))) (bool false))
+(equal? (evaluate (isnul (nul))) (bool true))
+
+(equal? (evaluate (pair-e (arith '+ (num 0) (num 1)) (num 2))) (pair-e (num 1) (num 2)))
+(equal? (evaluate (pair-e (nul) (nul))) (pair-e (nul) (nul)))
+
+(equal? (evaluate (fst (pair-e (num 0) (nul)))) (num 0))
+(equal? (evaluate (snd (pair-e (bool false) (bool true)))) (bool true))
+(equal? (evaluate (fst (pair-e (arith '+ (num 0) (num 1)) (num 999)))) (num 1))
 ;; neq
 (displayln "neq tests")
 (with-handlers ([exn:fail? (lambda (exn) #f)])
